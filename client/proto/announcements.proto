@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package announcements;
+
+option go_package = ".";
+
+message SearchAnnouncementsRequest {
+  int32 offset = 1;
+  string userID = 2;
+  string searchString = 3;
+  string category = 4;
+  string orderby = 5;
+  int32 announcementID = 6;
+  string authorID = 7;
+}
+
+message SearchAnnouncementsResponse {
+  repeated AnnouncementData announcementsData = 1;
+  string error = 2;
+}
+
+message AnnouncementData {
+  string authorName = 1;
+  int32 authorID = 2;
+  string title = 3;
+  string description = 4;
+  string category = 5;
+  string linkToAnnouncement = 6;
+  int32 announcementID = 7;
+  repeated string images = 8;
+}
+
+message CreateAnnouncementRequest {
+  string title = 1;
+  string description = 2;
+  string category = 3;
+  string authorID = 4;
+  repeated string imagesPath = 5;
+}
+
+message CreateAnnouncementResponse {
+  string error = 1;
+}
+
+message DeleteAnnouncementRequest {
+  int32 announcementID = 1;
+}
+
+message DeleteAnnouncementResponse {
+  string error = 1;
+}
+
+service Announcements {
+  rpc SearchAnnouncements(stream SearchAnnouncementsRequest) returns (SearchAnnouncementsResponse);
+  rpc CreateAnnouncement(stream CreateAnnouncementRequest) returns (stream CreateAnnouncementResponse);
+  rpc DeleteAnnouncement(DeleteAnnouncementRequest) returns (DeleteAnnouncementResponse);
+}

@@ -1,0 +1,217 @@
+package announcements
+
+import (
+	"database/sql"
+	"errors"
+	"fmt"
+	"os"
+	"strconv"
+	"strings"
+
+	"github.com/lib/pq"
+	"github.com/pgvector/pgvector-go"
+
+	"announcements/embedding"
+	pb "announcements/proto"
+)
+
+const (
+	limitAnnouncementsToShowInt = 5
+	whereSnippetSQLSearchString = ` (title ILIKE '%' || $%d || '%'
+		OR description ILIKE '%' || $%d || '%'
+		OR SIMILARITY(title, $%d) > 0.3
+		OR SIMILARITY(description, $%d) > 0.3)`
+	whereSnippetSQLUserID      = " (announcement_author_id = $%d)"
+	whereSnippetSQLCategory    = " (category = $%d)"
+	snippetSQLOrderByCreateAt  = " ORDER BY create_at DESC"
+	snippetSQLOrderByEmbedding = " ORDER BY embedding <=> (SELECT embedding FROM users WHERE user_id = $%d)"
+	snippetSQlOffsetAndLimit   = " OFFSET $%d LIMIT $%d"
+)
+
+const (
+	PathToDefaultImage = "d.webp"
+)
+
+var imagesServiceExternalConnections string
+
+func getAnnouncementInfo(announcementID, userID int32) ([]*pb.AnnouncementData, error) {
+	announcementData := []*pb.AnnouncementData{}
+
+	var authorID int
+	var authorName string
+	var userEmbedding pgvector.Vector
+	var title string
+	var description string
+	var images []string
+	var category string
+	var announcementEmbedding pgvector.Vector
+	sqlRow := db.QueryRow("SELECT title, description, announcement_author_id, images_path, category, embedding FROM announcements WHERE announcement_id = $1", announcementID)
+	if err := sqlRow.Scan(&title, &description, &authorID, pq.Array(&images), &category, &announcementEmbedding); err != nil {
+		return announcementData, errors.New("Нет объявления с таким id")
+	}
+
+	if err := db.QueryRow("SELECT name, embedding FROM users WHERE user_id = $1", authorID).Scan(&authorName, &userEmbedding); err != nil {
+		authorName = "Неизвестно"
+	}
+
+	userEmbeddingFloat32 := userEmbedding.Slice()
+	announcementEmbeddingFloat32 := announcementEmbedding.Slice()
+	go embedding.UpdateUserEmbedding(db, &userEmbeddingFloat32, &announcementEmbeddingFloat32, userID)
+
+	announcementData = append(announcementData, &pb.AnnouncementData{
+		AuthorName:         authorName,
+		AuthorID:           int32(authorID),
+		Title:              title,
+		Description:        description,
+		Category:           category,
+		LinkToAnnouncement: "/announcements?id=" + strconv.Itoa(int(announcementID)),
+		AnnouncementID:     announcementID,
+		Images:             images,
+	})
+
+	return announcementData, nil
+}
+
+func (s *AnnouncementsServer) SearchAnnouncements(stream pb.Announcements_SearchAnnouncementsServer) error {
+	data := &pb.SearchAnnouncementsResponse{}
+
+	req, err := stream.Recv()
+	if err != nil {
+		return err
+	}
+
+	if req.AnnouncementID != 0 {
+		userIDInt, err := strconv.Atoi(req.UserID)
+		if err != nil {
+			return err
+		}
+
+		data.AnnouncementsData, err = getAnnouncementInfo(req.AnnouncementID, int32(userIDInt))
+		if err != nil {
+			return err
+		}
+
+		return stream.SendAndClose(data)
+	}
+
+	query := "SELECT announcement_id, title, description, announcement_author_id, images_path[1], category FROM announcements"
+	var snippets []string
+	countArgs := 1
+	args := []interface{}{}
+
+	if req.SearchString != "" {
+		snippets, args, countArgs = combineSQLSnippets(snippets, args, countArgs, whereSnippetSQLSearchString, req.SearchString)
+		// combineSQLConditions(&queryWhere, strings.ReplaceAll(whereSnippetSQLSearchString, "$searchString", fmt.Sprintf("'%s'", req.SearchString)))
+	}
+
+	if req.AuthorID != "" {
+		snippets, args, countArgs = combineSQLSnippets(snippets, args, countArgs, whereSnippetSQLUserID, req.AuthorID)
+		// combineSQLConditions(&queryWhere, strings.ReplaceAll(whereSnippetSQLUserID, "$userID", req.AuthorID))
+	}
+
+	if req.Category != "" {
+		snippets, args, countArgs = combineSQLSnippets(snippets, args, countArgs, whereSnippetSQLCategory, req.Category)
+		// combineSQLConditions(&queryWhere, strings.ReplaceAll(whereSnippetSQLCategory, "$category", req.Category))
+	}
+
+	if len(snippets) >= 1 {
+		query += " WHERE " + strings.Join(snippets, " AND ")
+	}
+
+	if req.Orderby == "new" {
+		query += snippetSQLOrderByCreateAt
+	} else {
+		query += fmt.Sprintf(snippetSQLOrderByEmbedding, countArgs)
+		args = append(args, req.UserID)
+		countArgs++
+		// strings.ReplaceAll(snippetSQLOrderByEmbedding, "$userID", req.UserID)
+	}
+
+	query += fmt.Sprintf(snippetSQlOffsetAndLimit, countArgs, countArgs+1)
+	args = append(args, req.Offset*limitAnnouncementsToShowInt, limitAnnouncementsToShowInt)
+	countArgs += 2
+
+	fmt.Println("QUERY " + query)
+	fmt.Println("offest ", req.Offset*limitAnnouncementsToShowInt)
+	fmt.Println("limit ", limitAnnouncementsToShowInt)
+	announcements, err := db.Query(query, args...)
+	if err != nil {
+		return err
+	}
+	defer announcements.Close()
+
+	var announcementID int
+	var authorID int
+	var authorName string
+	var title string
+	var description string
+	var category string
+	var firstImagesPath sql.NullString
+	for announcements.Next() {
+		fmt.Println("")
+		if err := announcements.Scan(&announcementID, &title, &description, &authorID, &firstImagesPath, &category); err != nil {
+			fmt.Println(err.Error())
+			return err
+		}
+
+		fmt.Println(announcementID)
+		fmt.Println(authorID)
+		fmt.Println(authorName)
+		fmt.Println(title)
+		fmt.Println(description)
+		fmt.Println(category)
+		fmt.Println(firstImagesPath)
+
+		if err := db.QueryRow("SELECT name FROM users WHERE user_id = $1", authorID).Scan(&authorName); err != nil {
+			return err
+		}
+
+		if imagesServiceExternalConnections == "" {
+			imagesServiceExternalConnections = os.Getenv("IMAGES_SERVICE_EXTERNAL_CONNECTIONS")
+		}
+
+		var firstImagesPathSlice []string
+		if firstImagesPath.String != "" {
+			firstImagesPathSlice = []string{imagesServiceExternalConnections + firstImagesPath.String}
+		} else {
+			firstImagesPathSlice = []string{imagesServiceExternalConnections + PathToDefaultImage}
+		}
+
+		if len(description) > 40 {
+			description = description[:37] + "..."
+		}
+
+		data.AnnouncementsData = append(data.AnnouncementsData, &pb.AnnouncementData{
+			AuthorName:         authorName,
+			Title:              title,
+			Description:        description,
+			Category:           category,
+			LinkToAnnouncement: "/announcements?id=" + strconv.Itoa(announcementID),
+			Images:             firstImagesPathSlice,
+			AnnouncementID:     int32(announcementID),
+		})
+	}
+
+	return stream.SendAndClose(data)
+}
+
+func combineSQLSnippets(snippets []string, args []interface{}, countArgs int, template string, valueToInsert interface{}) ([]string, []interface{}, int) {
+	numPlaceholders := strings.Count(template, "%d")
+	formatArgs := make([]interface{}, numPlaceholders)
+	for i := range formatArgs {
+		formatArgs[i] = countArgs
+	}
+
+	snippets = append(snippets, fmt.Sprintf(template, formatArgs...))
+	args = append(args, valueToInsert)
+	countArgs++
+	return snippets, args, countArgs
+}
+
+// func combineSQLConditions(queryWhere *string, condition string) {
+// 	if *queryWhere != "" {
+// 		*queryWhere += " AND " + condition
+// 	} else {
+// 		*queryWhere += " WHERE " + condition
+// 	}
+// }
