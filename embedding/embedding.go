@@ -3,6 +3,7 @@ package embedding
 import (
 	"bytes"
 	"database/sql"
+	"errors"
 	"io"
 	"net/http"
 	"os"
@@ -19,18 +20,38 @@ var client = &http.Client{
 
 const userAdaptationRate = 0.9
 
-type Response struct {
+type ollamaJsonResponse struct {
 	Embedding []float64
+}
+
+type ollamaJsonRequest struct {
+	model  string
+	prompt string
 }
 
 var ollamaHost = os.Getenv("OLLAMA_HOST")
 
 func InsertEmbedding(db *sql.DB, rowID int, text, insertCommand string) error {
-	jsonBody := []byte(`{"model":  "nomic-embed-text", "prompt": "` + text + `"}`)
+	if ollamaHost == "" {
+		return errors.New("Переменная OLLAMA_HOST должна иметь значение: адрес локальной нейросети ollama")
+	}
+
+	req := ollamaJsonRequest{
+		model:  "nomic-embed-text",
+		prompt: text,
+	}
+
+	jsonBody, err := json.Marshal(req)
+	if err != nil {
+		return err
+	}
 
 	resp, err := client.Post(ollamaHost+"/api/embeddings", "application/json", bytes.NewBuffer(jsonBody))
 	if err != nil {
 		return err
+	}
+	if resp.StatusCode != http.StatusOK {
+		return errors.New("Ollama вернул статус код не 200")
 	}
 
 	defer func() {
@@ -38,7 +59,7 @@ func InsertEmbedding(db *sql.DB, rowID int, text, insertCommand string) error {
 		resp.Body.Close()
 	}()
 
-	var result Response
+	var result ollamaJsonResponse
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return err
 	}
