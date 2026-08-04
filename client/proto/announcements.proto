@@ -35,10 +35,19 @@ message CreateAnnouncementRequest {
   string description = 2;
   string category = 3;
   string authorID = 4;
-  repeated string imagesPath = 5;
 }
 
 message CreateAnnouncementResponse {
+  string error = 1;
+  int32 announcementID = 2;
+}
+
+message AddImagesRequest {
+  repeated string imagesPath = 1;
+  int32 announcementID = 2;
+}
+
+message AddImagesResponse {
   string error = 1;
 }
 
@@ -52,6 +61,7 @@ message DeleteAnnouncementResponse {
 
 service Announcements {
   rpc SearchAnnouncements(stream SearchAnnouncementsRequest) returns (SearchAnnouncementsResponse);
-  rpc CreateAnnouncement(stream CreateAnnouncementRequest) returns (stream CreateAnnouncementResponse);
+  rpc CreateAnnouncement(stream CreateAnnouncementRequest) returns (CreateAnnouncementResponse);
+  rpc AddImages(stream AddImagesRequest) returns (AddImagesResponse);
   rpc DeleteAnnouncement(DeleteAnnouncementRequest) returns (DeleteAnnouncementResponse);
 }

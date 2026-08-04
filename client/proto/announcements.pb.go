@@ -271,7 +271,6 @@ type CreateAnnouncementRequest struct {
 	Description   string                 `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
 	Category      string                 `protobuf:"bytes,3,opt,name=category,proto3" json:"category,omitempty"`
 	AuthorID      string                 `protobuf:"bytes,4,opt,name=authorID,proto3" json:"authorID,omitempty"`
-	ImagesPath    []string               `protobuf:"bytes,5,rep,name=imagesPath,proto3" json:"imagesPath,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -334,18 +333,12 @@ func (x *CreateAnnouncementRequest) GetAuthorID() string {
 	return ""
 }
 
-func (x *CreateAnnouncementRequest) GetImagesPath() []string {
-	if x != nil {
-		return x.ImagesPath
-	}
-	return nil
-}
-
 type CreateAnnouncementResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Error         string                 `protobuf:"bytes,1,opt,name=error,proto3" json:"error,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Error          string                 `protobuf:"bytes,1,opt,name=error,proto3" json:"error,omitempty"`
+	AnnouncementID int32                  `protobuf:"varint,2,opt,name=announcementID,proto3" json:"announcementID,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *CreateAnnouncementResponse) Reset() {
@@ -385,6 +378,109 @@ func (x *CreateAnnouncementResponse) GetError() string {
 	return ""
 }
 
+func (x *CreateAnnouncementResponse) GetAnnouncementID() int32 {
+	if x != nil {
+		return x.AnnouncementID
+	}
+	return 0
+}
+
+type AddImagesRequest struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	ImagesPath     []string               `protobuf:"bytes,1,rep,name=imagesPath,proto3" json:"imagesPath,omitempty"`
+	AnnouncementID int32                  `protobuf:"varint,2,opt,name=announcementID,proto3" json:"announcementID,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *AddImagesRequest) Reset() {
+	*x = AddImagesRequest{}
+	mi := &file_announcements_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AddImagesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AddImagesRequest) ProtoMessage() {}
+
+func (x *AddImagesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_announcements_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AddImagesRequest.ProtoReflect.Descriptor instead.
+func (*AddImagesRequest) Descriptor() ([]byte, []int) {
+	return file_announcements_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *AddImagesRequest) GetImagesPath() []string {
+	if x != nil {
+		return x.ImagesPath
+	}
+	return nil
+}
+
+func (x *AddImagesRequest) GetAnnouncementID() int32 {
+	if x != nil {
+		return x.AnnouncementID
+	}
+	return 0
+}
+
+type AddImagesResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Error         string                 `protobuf:"bytes,1,opt,name=error,proto3" json:"error,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AddImagesResponse) Reset() {
+	*x = AddImagesResponse{}
+	mi := &file_announcements_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AddImagesResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AddImagesResponse) ProtoMessage() {}
+
+func (x *AddImagesResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_announcements_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AddImagesResponse.ProtoReflect.Descriptor instead.
+func (*AddImagesResponse) Descriptor() ([]byte, []int) {
+	return file_announcements_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *AddImagesResponse) GetError() string {
+	if x != nil {
+		return x.Error
+	}
+	return ""
+}
+
 type DeleteAnnouncementRequest struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	AnnouncementID int32                  `protobuf:"varint,1,opt,name=announcementID,proto3" json:"announcementID,omitempty"`
@@ -394,7 +490,7 @@ type DeleteAnnouncementRequest struct {
 
 func (x *DeleteAnnouncementRequest) Reset() {
 	*x = DeleteAnnouncementRequest{}
-	mi := &file_announcements_proto_msgTypes[5]
+	mi := &file_announcements_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -406,7 +502,7 @@ func (x *DeleteAnnouncementRequest) String() string {
 func (*DeleteAnnouncementRequest) ProtoMessage() {}
 
 func (x *DeleteAnnouncementRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_announcements_proto_msgTypes[5]
+	mi := &file_announcements_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -419,7 +515,7 @@ func (x *DeleteAnnouncementRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteAnnouncementRequest.ProtoReflect.Descriptor instead.
 func (*DeleteAnnouncementRequest) Descriptor() ([]byte, []int) {
-	return file_announcements_proto_rawDescGZIP(), []int{5}
+	return file_announcements_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *DeleteAnnouncementRequest) GetAnnouncementID() int32 {
@@ -438,7 +534,7 @@ type DeleteAnnouncementResponse struct {
 
 func (x *DeleteAnnouncementResponse) Reset() {
 	*x = DeleteAnnouncementResponse{}
-	mi := &file_announcements_proto_msgTypes[6]
+	mi := &file_announcements_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -450,7 +546,7 @@ func (x *DeleteAnnouncementResponse) String() string {
 func (*DeleteAnnouncementResponse) ProtoMessage() {}
 
 func (x *DeleteAnnouncementResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_announcements_proto_msgTypes[6]
+	mi := &file_announcements_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -463,7 +559,7 @@ func (x *DeleteAnnouncementResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteAnnouncementResponse.ProtoReflect.Descriptor instead.
 func (*DeleteAnnouncementResponse) Descriptor() ([]byte, []int) {
-	return file_announcements_proto_rawDescGZIP(), []int{6}
+	return file_announcements_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *DeleteAnnouncementResponse) GetError() string {
@@ -499,24 +595,30 @@ const file_announcements_proto_rawDesc = "" +
 	"\bcategory\x18\x05 \x01(\tR\bcategory\x12.\n" +
 	"\x12linkToAnnouncement\x18\x06 \x01(\tR\x12linkToAnnouncement\x12&\n" +
 	"\x0eannouncementID\x18\a \x01(\x05R\x0eannouncementID\x12\x16\n" +
-	"\x06images\x18\b \x03(\tR\x06images\"\xab\x01\n" +
+	"\x06images\x18\b \x03(\tR\x06images\"\x8b\x01\n" +
 	"\x19CreateAnnouncementRequest\x12\x14\n" +
 	"\x05title\x18\x01 \x01(\tR\x05title\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x1a\n" +
 	"\bcategory\x18\x03 \x01(\tR\bcategory\x12\x1a\n" +
-	"\bauthorID\x18\x04 \x01(\tR\bauthorID\x12\x1e\n" +
-	"\n" +
-	"imagesPath\x18\x05 \x03(\tR\n" +
-	"imagesPath\"2\n" +
+	"\bauthorID\x18\x04 \x01(\tR\bauthorID\"Z\n" +
 	"\x1aCreateAnnouncementResponse\x12\x14\n" +
+	"\x05error\x18\x01 \x01(\tR\x05error\x12&\n" +
+	"\x0eannouncementID\x18\x02 \x01(\x05R\x0eannouncementID\"Z\n" +
+	"\x10AddImagesRequest\x12\x1e\n" +
+	"\n" +
+	"imagesPath\x18\x01 \x03(\tR\n" +
+	"imagesPath\x12&\n" +
+	"\x0eannouncementID\x18\x02 \x01(\x05R\x0eannouncementID\")\n" +
+	"\x11AddImagesResponse\x12\x14\n" +
 	"\x05error\x18\x01 \x01(\tR\x05error\"C\n" +
 	"\x19DeleteAnnouncementRequest\x12&\n" +
 	"\x0eannouncementID\x18\x01 \x01(\x05R\x0eannouncementID\"2\n" +
 	"\x1aDeleteAnnouncementResponse\x12\x14\n" +
-	"\x05error\x18\x01 \x01(\tR\x05error2\xd9\x02\n" +
+	"\x05error\x18\x01 \x01(\tR\x05error2\xa9\x03\n" +
 	"\rAnnouncements\x12n\n" +
-	"\x13SearchAnnouncements\x12).announcements.SearchAnnouncementsRequest\x1a*.announcements.SearchAnnouncementsResponse(\x01\x12m\n" +
-	"\x12CreateAnnouncement\x12(.announcements.CreateAnnouncementRequest\x1a).announcements.CreateAnnouncementResponse(\x010\x01\x12i\n" +
+	"\x13SearchAnnouncements\x12).announcements.SearchAnnouncementsRequest\x1a*.announcements.SearchAnnouncementsResponse(\x01\x12k\n" +
+	"\x12CreateAnnouncement\x12(.announcements.CreateAnnouncementRequest\x1a).announcements.CreateAnnouncementResponse(\x01\x12P\n" +
+	"\tAddImages\x12\x1f.announcements.AddImagesRequest\x1a .announcements.AddImagesResponse(\x01\x12i\n" +
 	"\x12DeleteAnnouncement\x12(.announcements.DeleteAnnouncementRequest\x1a).announcements.DeleteAnnouncementResponseB\x03Z\x01.b\x06proto3"
 
 var (
@@ -531,26 +633,30 @@ func file_announcements_proto_rawDescGZIP() []byte {
 	return file_announcements_proto_rawDescData
 }
 
-var file_announcements_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_announcements_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_announcements_proto_goTypes = []any{
 	(*SearchAnnouncementsRequest)(nil),  // 0: announcements.SearchAnnouncementsRequest
 	(*SearchAnnouncementsResponse)(nil), // 1: announcements.SearchAnnouncementsResponse
 	(*AnnouncementData)(nil),            // 2: announcements.AnnouncementData
 	(*CreateAnnouncementRequest)(nil),   // 3: announcements.CreateAnnouncementRequest
 	(*CreateAnnouncementResponse)(nil),  // 4: announcements.CreateAnnouncementResponse
-	(*DeleteAnnouncementRequest)(nil),   // 5: announcements.DeleteAnnouncementRequest
-	(*DeleteAnnouncementResponse)(nil),  // 6: announcements.DeleteAnnouncementResponse
+	(*AddImagesRequest)(nil),            // 5: announcements.AddImagesRequest
+	(*AddImagesResponse)(nil),           // 6: announcements.AddImagesResponse
+	(*DeleteAnnouncementRequest)(nil),   // 7: announcements.DeleteAnnouncementRequest
+	(*DeleteAnnouncementResponse)(nil),  // 8: announcements.DeleteAnnouncementResponse
 }
 var file_announcements_proto_depIdxs = []int32{
 	2, // 0: announcements.SearchAnnouncementsResponse.announcementsData:type_name -> announcements.AnnouncementData
 	0, // 1: announcements.Announcements.SearchAnnouncements:input_type -> announcements.SearchAnnouncementsRequest
 	3, // 2: announcements.Announcements.CreateAnnouncement:input_type -> announcements.CreateAnnouncementRequest
-	5, // 3: announcements.Announcements.DeleteAnnouncement:input_type -> announcements.DeleteAnnouncementRequest
-	1, // 4: announcements.Announcements.SearchAnnouncements:output_type -> announcements.SearchAnnouncementsResponse
-	4, // 5: announcements.Announcements.CreateAnnouncement:output_type -> announcements.CreateAnnouncementResponse
-	6, // 6: announcements.Announcements.DeleteAnnouncement:output_type -> announcements.DeleteAnnouncementResponse
-	4, // [4:7] is the sub-list for method output_type
-	1, // [1:4] is the sub-list for method input_type
+	5, // 3: announcements.Announcements.AddImages:input_type -> announcements.AddImagesRequest
+	7, // 4: announcements.Announcements.DeleteAnnouncement:input_type -> announcements.DeleteAnnouncementRequest
+	1, // 5: announcements.Announcements.SearchAnnouncements:output_type -> announcements.SearchAnnouncementsResponse
+	4, // 6: announcements.Announcements.CreateAnnouncement:output_type -> announcements.CreateAnnouncementResponse
+	6, // 7: announcements.Announcements.AddImages:output_type -> announcements.AddImagesResponse
+	8, // 8: announcements.Announcements.DeleteAnnouncement:output_type -> announcements.DeleteAnnouncementResponse
+	5, // [5:9] is the sub-list for method output_type
+	1, // [1:5] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
 	1, // [1:1] is the sub-list for extension extendee
 	0, // [0:1] is the sub-list for field type_name
@@ -567,7 +673,7 @@ func file_announcements_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_announcements_proto_rawDesc), len(file_announcements_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   7,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
