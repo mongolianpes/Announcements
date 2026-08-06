@@ -17,15 +17,15 @@ import (
 
 const (
 	limitAnnouncementsToShowInt = 5
-	whereSnippetSQLSearchString = ` (title ILIKE '%' || $%d || '%'
-		OR description ILIKE '%' || $%d || '%'
+	whereSnippetSQLSearchString = ` (title ILIKE '%%' || $%d || '%%'
+		OR description ILIKE '%%' || $%d || '%%'
 		OR SIMILARITY(title, $%d) > 0.3
 		OR SIMILARITY(description, $%d) > 0.3)`
 	whereSnippetSQLUserID      = " (announcement_author_id = $%d)"
 	whereSnippetSQLCategory    = " (category = $%d)"
 	snippetSQLOrderByCreateAt  = " ORDER BY create_at DESC"
 	snippetSQLOrderByEmbedding = " ORDER BY embedding <=> (SELECT embedding FROM users WHERE user_id = $%d)"
-	snippetSQlOffsetAndLimit   = " OFFSET $%d LIMIT $%d"
+	snippetSQLOffsetAndLimit   = " OFFSET $%d LIMIT $%d"
 )
 
 const (
@@ -106,17 +106,14 @@ func (s *AnnouncementsServer) SearchAnnouncements(stream pb.Announcements_Search
 
 	if req.SearchString != "" {
 		snippets, args, countArgs = combineSQLSnippets(snippets, args, countArgs, whereSnippetSQLSearchString, req.SearchString)
-		// combineSQLConditions(&queryWhere, strings.ReplaceAll(whereSnippetSQLSearchString, "$searchString", fmt.Sprintf("'%s'", req.SearchString)))
 	}
 
 	if req.AuthorID != "" {
 		snippets, args, countArgs = combineSQLSnippets(snippets, args, countArgs, whereSnippetSQLUserID, req.AuthorID)
-		// combineSQLConditions(&queryWhere, strings.ReplaceAll(whereSnippetSQLUserID, "$userID", req.AuthorID))
 	}
 
 	if req.Category != "" {
 		snippets, args, countArgs = combineSQLSnippets(snippets, args, countArgs, whereSnippetSQLCategory, req.Category)
-		// combineSQLConditions(&queryWhere, strings.ReplaceAll(whereSnippetSQLCategory, "$category", req.Category))
 	}
 
 	if len(snippets) >= 1 {
@@ -129,10 +126,9 @@ func (s *AnnouncementsServer) SearchAnnouncements(stream pb.Announcements_Search
 		query += fmt.Sprintf(snippetSQLOrderByEmbedding, countArgs)
 		args = append(args, req.UserID)
 		countArgs++
-		// strings.ReplaceAll(snippetSQLOrderByEmbedding, "$userID", req.UserID)
 	}
 
-	query += fmt.Sprintf(snippetSQlOffsetAndLimit, countArgs, countArgs+1)
+	query += fmt.Sprintf(snippetSQLOffsetAndLimit, countArgs, countArgs+1)
 	args = append(args, req.Offset*limitAnnouncementsToShowInt, limitAnnouncementsToShowInt)
 	countArgs += 2
 
@@ -199,11 +195,3 @@ func combineSQLSnippets(snippets []string, args []interface{}, countArgs int, te
 	countArgs++
 	return snippets, args, countArgs
 }
-
-// func combineSQLConditions(queryWhere *string, condition string) {
-// 	if *queryWhere != "" {
-// 		*queryWhere += " AND " + condition
-// 	} else {
-// 		*queryWhere += " WHERE " + condition
-// 	}
-// }
