@@ -2,6 +2,7 @@ package announcements
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/lib/pq"
 
@@ -37,7 +38,10 @@ func (s *AnnouncementsServer) CreateAnnouncement(stream pb.Announcements_CreateA
 		return err
 	}
 
-	go embedding.InsertEmbedding(db, int(data.AnnouncementID), req.Title+req.Description, "UPDATE announcements SET embedding = $1::float8[] WHERE announcement_id = $2")
+	if err := embedding.InsertEmbedding(db, int(data.AnnouncementID), req.Title+req.Description, "UPDATE announcements SET embedding = $1::float8[] WHERE announcement_id = $2"); err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
 
 	return nil
 }

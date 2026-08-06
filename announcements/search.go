@@ -45,6 +45,7 @@ func getAnnouncementInfo(announcementID, userID int32) ([]*pb.AnnouncementData, 
 	var images []string
 	var category string
 	var announcementEmbedding pgvector.Vector
+	fmt.Println(announcementID)
 	sqlRow := db.QueryRow("SELECT title, description, announcement_author_id, images_path, category, embedding FROM announcements WHERE announcement_id = $1", announcementID)
 	if err := sqlRow.Scan(&title, &description, &authorID, pq.Array(&images), &category, &announcementEmbedding); err != nil {
 		return announcementData, errors.New("Нет объявления с таким id")
@@ -68,6 +69,10 @@ func getAnnouncementInfo(announcementID, userID int32) ([]*pb.AnnouncementData, 
 		AnnouncementID:     announcementID,
 		Images:             images,
 	})
+
+	for _, a := range announcementData {
+		fmt.Println("one an", &a)
+	}
 
 	return announcementData, nil
 }
@@ -131,9 +136,6 @@ func (s *AnnouncementsServer) SearchAnnouncements(stream pb.Announcements_Search
 	args = append(args, req.Offset*limitAnnouncementsToShowInt, limitAnnouncementsToShowInt)
 	countArgs += 2
 
-	fmt.Println("QUERY " + query)
-	fmt.Println("offest ", req.Offset*limitAnnouncementsToShowInt)
-	fmt.Println("limit ", limitAnnouncementsToShowInt)
 	announcements, err := db.Query(query, args...)
 	if err != nil {
 		return err
@@ -148,19 +150,9 @@ func (s *AnnouncementsServer) SearchAnnouncements(stream pb.Announcements_Search
 	var category string
 	var firstImagesPath sql.NullString
 	for announcements.Next() {
-		fmt.Println("")
 		if err := announcements.Scan(&announcementID, &title, &description, &authorID, &firstImagesPath, &category); err != nil {
-			fmt.Println(err.Error())
 			return err
 		}
-
-		fmt.Println(announcementID)
-		fmt.Println(authorID)
-		fmt.Println(authorName)
-		fmt.Println(title)
-		fmt.Println(description)
-		fmt.Println(category)
-		fmt.Println(firstImagesPath)
 
 		if err := db.QueryRow("SELECT name FROM users WHERE user_id = $1", authorID).Scan(&authorName); err != nil {
 			return err
