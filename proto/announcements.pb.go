@@ -484,6 +484,7 @@ func (x *AddImagesResponse) GetError() string {
 type DeleteAnnouncementRequest struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	AnnouncementID int32                  `protobuf:"varint,1,opt,name=announcementID,proto3" json:"announcementID,omitempty"`
+	UserID         int32                  `protobuf:"varint,2,opt,name=userID,proto3" json:"userID,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -521,6 +522,13 @@ func (*DeleteAnnouncementRequest) Descriptor() ([]byte, []int) {
 func (x *DeleteAnnouncementRequest) GetAnnouncementID() int32 {
 	if x != nil {
 		return x.AnnouncementID
+	}
+	return 0
+}
+
+func (x *DeleteAnnouncementRequest) GetUserID() int32 {
+	if x != nil {
+		return x.UserID
 	}
 	return 0
 }
@@ -610,9 +618,10 @@ const file_announcements_proto_rawDesc = "" +
 	"imagesPath\x12&\n" +
 	"\x0eannouncementID\x18\x02 \x01(\x05R\x0eannouncementID\")\n" +
 	"\x11AddImagesResponse\x12\x14\n" +
-	"\x05error\x18\x01 \x01(\tR\x05error\"C\n" +
+	"\x05error\x18\x01 \x01(\tR\x05error\"[\n" +
 	"\x19DeleteAnnouncementRequest\x12&\n" +
-	"\x0eannouncementID\x18\x01 \x01(\x05R\x0eannouncementID\"2\n" +
+	"\x0eannouncementID\x18\x01 \x01(\x05R\x0eannouncementID\x12\x16\n" +
+	"\x06userID\x18\x02 \x01(\x05R\x06userID\"2\n" +
 	"\x1aDeleteAnnouncementResponse\x12\x14\n" +
 	"\x05error\x18\x01 \x01(\tR\x05error2\xa9\x03\n" +
 	"\rAnnouncements\x12n\n" +

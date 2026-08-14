@@ -53,6 +53,7 @@ message AddImagesResponse {
 
 message DeleteAnnouncementRequest {
   int32 announcementID = 1;
+  int32 userID = 2;
 }
 
 message DeleteAnnouncementResponse {
