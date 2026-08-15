@@ -16,7 +16,6 @@ message SearchAnnouncementsRequest {
 
 message SearchAnnouncementsResponse {
   repeated AnnouncementData announcementsData = 1;
-  string error = 2;
 }
 
 message AnnouncementData {
@@ -38,8 +37,7 @@ message CreateAnnouncementRequest {
 }
 
 message CreateAnnouncementResponse {
-  string error = 1;
-  int32 announcementID = 2;
+  int32 announcementID = 1;
 }
 
 message AddImagesRequest {
@@ -47,22 +45,18 @@ message AddImagesRequest {
   int32 announcementID = 2;
 }
 
-message AddImagesResponse {
-  string error = 1;
-}
+message AddImagesResponse {}
 
 message DeleteAnnouncementRequest {
   int32 announcementID = 1;
   int32 userID = 2;
 }
 
-message DeleteAnnouncementResponse {
-  string error = 1;
-}
+message DeleteAnnouncementResponse {}
 
 service Announcements {
-  rpc SearchAnnouncements(stream SearchAnnouncementsRequest) returns (SearchAnnouncementsResponse);
-  rpc CreateAnnouncement(stream CreateAnnouncementRequest) returns (CreateAnnouncementResponse);
-  rpc AddImages(stream AddImagesRequest) returns (AddImagesResponse);
+  rpc SearchAnnouncements(SearchAnnouncementsRequest) returns (SearchAnnouncementsResponse);
+  rpc CreateAnnouncement(CreateAnnouncementRequest) returns (CreateAnnouncementResponse);
+  rpc AddImages(AddImagesRequest) returns (AddImagesResponse);
   rpc DeleteAnnouncement(DeleteAnnouncementRequest) returns (DeleteAnnouncementResponse);
 }

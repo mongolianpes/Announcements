@@ -1,6 +1,7 @@
 package announcements
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 	"fmt"
@@ -77,26 +78,21 @@ func getAnnouncementInfo(announcementID, userID int32) ([]*pb.AnnouncementData, 
 	return announcementData, nil
 }
 
-func (s *AnnouncementsServer) SearchAnnouncements(stream pb.Announcements_SearchAnnouncementsServer) error {
+func (s *AnnouncementsServer) SearchAnnouncements(ctx context.Context, req *pb.SearchAnnouncementsRequest) (*pb.SearchAnnouncementsResponse, error) {
 	data := &pb.SearchAnnouncementsResponse{}
-
-	req, err := stream.Recv()
-	if err != nil {
-		return err
-	}
 
 	if req.AnnouncementID != 0 {
 		userIDInt, err := strconv.Atoi(req.UserID)
 		if err != nil {
-			return err
+			return nil, err
 		}
 
 		data.AnnouncementsData, err = getAnnouncementInfo(req.AnnouncementID, int32(userIDInt))
 		if err != nil {
-			return err
+			return nil, err
 		}
 
-		return stream.SendAndClose(data)
+		return data, nil
 	}
 
 	query := "SELECT announcement_id, title, description, announcement_author_id, images_path[1], category FROM announcements"
@@ -134,7 +130,7 @@ func (s *AnnouncementsServer) SearchAnnouncements(stream pb.Announcements_Search
 
 	announcements, err := db.Query(query, args...)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer announcements.Close()
 
@@ -147,11 +143,11 @@ func (s *AnnouncementsServer) SearchAnnouncements(stream pb.Announcements_Search
 	var firstImagesPath sql.NullString
 	for announcements.Next() {
 		if err := announcements.Scan(&announcementID, &title, &description, &authorID, &firstImagesPath, &category); err != nil {
-			return err
+			return nil, err
 		}
 
 		if err := db.QueryRow("SELECT name FROM users WHERE user_id = $1", authorID).Scan(&authorName); err != nil {
-			return err
+			return nil, err
 		}
 
 		if imagesServiceExternalConnections == "" {
@@ -180,7 +176,7 @@ func (s *AnnouncementsServer) SearchAnnouncements(stream pb.Announcements_Search
 		})
 	}
 
-	return stream.SendAndClose(data)
+	return data, nil
 }
 
 func combineSQLSnippets(snippets []string, args []interface{}, countArgs int, template string, valueToInsert interface{}) ([]string, []interface{}, int) {

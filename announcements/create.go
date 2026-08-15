@@ -1,8 +1,8 @@
 package announcements
 
 import (
+	"context"
 	"errors"
-	"fmt"
 
 	"github.com/lib/pq"
 
@@ -10,12 +10,7 @@ import (
 	pb "announcements/proto"
 )
 
-func (s *AnnouncementsServer) CreateAnnouncement(stream pb.Announcements_CreateAnnouncementServer) error {
-	req, err := stream.Recv()
-	if err != nil {
-		return err
-	}
-
+func (s *AnnouncementsServer) CreateAnnouncement(ctx context.Context, req *pb.CreateAnnouncementRequest) (*pb.CreateAnnouncementResponse, error) {
 	data := &pb.CreateAnnouncementResponse{}
 
 	const queryAddAnnouncementInfo = "INSERT INTO announcements (title, description, category, announcement_author_id) VALUES ($1, $2, $3, $4) RETURNING announcement_id"
@@ -31,38 +26,26 @@ func (s *AnnouncementsServer) CreateAnnouncement(stream pb.Announcements_CreateA
 		} else {
 			errCause = "Неизвестная ошибка, попробуйте позже"
 		}
-		return errors.New(errCause)
-	}
-
-	if err := stream.SendAndClose(data); err != nil {
-		return err
+		return nil, errors.New(errCause)
 	}
 
 	if err := embedding.InsertEmbedding(db, int(data.AnnouncementID), req.Title+req.Description, "UPDATE announcements SET embedding = $1::float8[] WHERE announcement_id = $2"); err != nil {
-		fmt.Println(err.Error())
-		return err
+		return nil, err
 	}
 
-	return nil
+	return data, nil
 }
 
-func (s *AnnouncementsServer) AddImages(stream pb.Announcements_AddImagesServer) error {
-	req, err := stream.Recv()
-	if err != nil {
-		return err
-	}
-
+func (s *AnnouncementsServer) AddImages(ctx context.Context, req *pb.AddImagesRequest) (*pb.AddImagesResponse, error) {
 	data := &pb.AddImagesResponse{}
 
 	if len(req.ImagesPath) > 0 {
 		if _, err := db.Exec("UPDATE announcements SET images_path = $1 WHERE announcement_id = $2", req.ImagesPath, req.AnnouncementID); err != nil {
-			return err
+			return nil, err
 		}
+	} else {
+		return nil, errors.New("Необходимо отправить хотя бы одно изображение")
 	}
 
-	if err := stream.SendAndClose(data); err != nil {
-		return err
-	}
-
-	return nil
+	return data, nil
 }

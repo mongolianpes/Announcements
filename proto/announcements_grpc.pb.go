@@ -29,9 +29,9 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AnnouncementsClient interface {
-	SearchAnnouncements(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[SearchAnnouncementsRequest, SearchAnnouncementsResponse], error)
-	CreateAnnouncement(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[CreateAnnouncementRequest, CreateAnnouncementResponse], error)
-	AddImages(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[AddImagesRequest, AddImagesResponse], error)
+	SearchAnnouncements(ctx context.Context, in *SearchAnnouncementsRequest, opts ...grpc.CallOption) (*SearchAnnouncementsResponse, error)
+	CreateAnnouncement(ctx context.Context, in *CreateAnnouncementRequest, opts ...grpc.CallOption) (*CreateAnnouncementResponse, error)
+	AddImages(ctx context.Context, in *AddImagesRequest, opts ...grpc.CallOption) (*AddImagesResponse, error)
 	DeleteAnnouncement(ctx context.Context, in *DeleteAnnouncementRequest, opts ...grpc.CallOption) (*DeleteAnnouncementResponse, error)
 }
 
@@ -43,44 +43,35 @@ func NewAnnouncementsClient(cc grpc.ClientConnInterface) AnnouncementsClient {
 	return &announcementsClient{cc}
 }
 
-func (c *announcementsClient) SearchAnnouncements(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[SearchAnnouncementsRequest, SearchAnnouncementsResponse], error) {
+func (c *announcementsClient) SearchAnnouncements(ctx context.Context, in *SearchAnnouncementsRequest, opts ...grpc.CallOption) (*SearchAnnouncementsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &Announcements_ServiceDesc.Streams[0], Announcements_SearchAnnouncements_FullMethodName, cOpts...)
+	out := new(SearchAnnouncementsResponse)
+	err := c.cc.Invoke(ctx, Announcements_SearchAnnouncements_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &grpc.GenericClientStream[SearchAnnouncementsRequest, SearchAnnouncementsResponse]{ClientStream: stream}
-	return x, nil
+	return out, nil
 }
 
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Announcements_SearchAnnouncementsClient = grpc.ClientStreamingClient[SearchAnnouncementsRequest, SearchAnnouncementsResponse]
-
-func (c *announcementsClient) CreateAnnouncement(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[CreateAnnouncementRequest, CreateAnnouncementResponse], error) {
+func (c *announcementsClient) CreateAnnouncement(ctx context.Context, in *CreateAnnouncementRequest, opts ...grpc.CallOption) (*CreateAnnouncementResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &Announcements_ServiceDesc.Streams[1], Announcements_CreateAnnouncement_FullMethodName, cOpts...)
+	out := new(CreateAnnouncementResponse)
+	err := c.cc.Invoke(ctx, Announcements_CreateAnnouncement_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &grpc.GenericClientStream[CreateAnnouncementRequest, CreateAnnouncementResponse]{ClientStream: stream}
-	return x, nil
+	return out, nil
 }
 
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Announcements_CreateAnnouncementClient = grpc.ClientStreamingClient[CreateAnnouncementRequest, CreateAnnouncementResponse]
-
-func (c *announcementsClient) AddImages(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[AddImagesRequest, AddImagesResponse], error) {
+func (c *announcementsClient) AddImages(ctx context.Context, in *AddImagesRequest, opts ...grpc.CallOption) (*AddImagesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &Announcements_ServiceDesc.Streams[2], Announcements_AddImages_FullMethodName, cOpts...)
+	out := new(AddImagesResponse)
+	err := c.cc.Invoke(ctx, Announcements_AddImages_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &grpc.GenericClientStream[AddImagesRequest, AddImagesResponse]{ClientStream: stream}
-	return x, nil
+	return out, nil
 }
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Announcements_AddImagesClient = grpc.ClientStreamingClient[AddImagesRequest, AddImagesResponse]
 
 func (c *announcementsClient) DeleteAnnouncement(ctx context.Context, in *DeleteAnnouncementRequest, opts ...grpc.CallOption) (*DeleteAnnouncementResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
@@ -96,9 +87,9 @@ func (c *announcementsClient) DeleteAnnouncement(ctx context.Context, in *Delete
 // All implementations must embed UnimplementedAnnouncementsServer
 // for forward compatibility.
 type AnnouncementsServer interface {
-	SearchAnnouncements(grpc.ClientStreamingServer[SearchAnnouncementsRequest, SearchAnnouncementsResponse]) error
-	CreateAnnouncement(grpc.ClientStreamingServer[CreateAnnouncementRequest, CreateAnnouncementResponse]) error
-	AddImages(grpc.ClientStreamingServer[AddImagesRequest, AddImagesResponse]) error
+	SearchAnnouncements(context.Context, *SearchAnnouncementsRequest) (*SearchAnnouncementsResponse, error)
+	CreateAnnouncement(context.Context, *CreateAnnouncementRequest) (*CreateAnnouncementResponse, error)
+	AddImages(context.Context, *AddImagesRequest) (*AddImagesResponse, error)
 	DeleteAnnouncement(context.Context, *DeleteAnnouncementRequest) (*DeleteAnnouncementResponse, error)
 	mustEmbedUnimplementedAnnouncementsServer()
 }
@@ -110,14 +101,14 @@ type AnnouncementsServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAnnouncementsServer struct{}
 
-func (UnimplementedAnnouncementsServer) SearchAnnouncements(grpc.ClientStreamingServer[SearchAnnouncementsRequest, SearchAnnouncementsResponse]) error {
-	return status.Error(codes.Unimplemented, "method SearchAnnouncements not implemented")
+func (UnimplementedAnnouncementsServer) SearchAnnouncements(context.Context, *SearchAnnouncementsRequest) (*SearchAnnouncementsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method SearchAnnouncements not implemented")
 }
-func (UnimplementedAnnouncementsServer) CreateAnnouncement(grpc.ClientStreamingServer[CreateAnnouncementRequest, CreateAnnouncementResponse]) error {
-	return status.Error(codes.Unimplemented, "method CreateAnnouncement not implemented")
+func (UnimplementedAnnouncementsServer) CreateAnnouncement(context.Context, *CreateAnnouncementRequest) (*CreateAnnouncementResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateAnnouncement not implemented")
 }
-func (UnimplementedAnnouncementsServer) AddImages(grpc.ClientStreamingServer[AddImagesRequest, AddImagesResponse]) error {
-	return status.Error(codes.Unimplemented, "method AddImages not implemented")
+func (UnimplementedAnnouncementsServer) AddImages(context.Context, *AddImagesRequest) (*AddImagesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AddImages not implemented")
 }
 func (UnimplementedAnnouncementsServer) DeleteAnnouncement(context.Context, *DeleteAnnouncementRequest) (*DeleteAnnouncementResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteAnnouncement not implemented")
@@ -143,26 +134,59 @@ func RegisterAnnouncementsServer(s grpc.ServiceRegistrar, srv AnnouncementsServe
 	s.RegisterService(&Announcements_ServiceDesc, srv)
 }
 
-func _Announcements_SearchAnnouncements_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(AnnouncementsServer).SearchAnnouncements(&grpc.GenericServerStream[SearchAnnouncementsRequest, SearchAnnouncementsResponse]{ServerStream: stream})
+func _Announcements_SearchAnnouncements_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchAnnouncementsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AnnouncementsServer).SearchAnnouncements(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Announcements_SearchAnnouncements_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AnnouncementsServer).SearchAnnouncements(ctx, req.(*SearchAnnouncementsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Announcements_SearchAnnouncementsServer = grpc.ClientStreamingServer[SearchAnnouncementsRequest, SearchAnnouncementsResponse]
-
-func _Announcements_CreateAnnouncement_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(AnnouncementsServer).CreateAnnouncement(&grpc.GenericServerStream[CreateAnnouncementRequest, CreateAnnouncementResponse]{ServerStream: stream})
+func _Announcements_CreateAnnouncement_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateAnnouncementRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AnnouncementsServer).CreateAnnouncement(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Announcements_CreateAnnouncement_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AnnouncementsServer).CreateAnnouncement(ctx, req.(*CreateAnnouncementRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Announcements_CreateAnnouncementServer = grpc.ClientStreamingServer[CreateAnnouncementRequest, CreateAnnouncementResponse]
-
-func _Announcements_AddImages_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(AnnouncementsServer).AddImages(&grpc.GenericServerStream[AddImagesRequest, AddImagesResponse]{ServerStream: stream})
+func _Announcements_AddImages_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddImagesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AnnouncementsServer).AddImages(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Announcements_AddImages_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AnnouncementsServer).AddImages(ctx, req.(*AddImagesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Announcements_AddImagesServer = grpc.ClientStreamingServer[AddImagesRequest, AddImagesResponse]
 
 func _Announcements_DeleteAnnouncement_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteAnnouncementRequest)
@@ -190,26 +214,22 @@ var Announcements_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AnnouncementsServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "SearchAnnouncements",
+			Handler:    _Announcements_SearchAnnouncements_Handler,
+		},
+		{
+			MethodName: "CreateAnnouncement",
+			Handler:    _Announcements_CreateAnnouncement_Handler,
+		},
+		{
+			MethodName: "AddImages",
+			Handler:    _Announcements_AddImages_Handler,
+		},
+		{
 			MethodName: "DeleteAnnouncement",
 			Handler:    _Announcements_DeleteAnnouncement_Handler,
 		},
 	},
-	Streams: []grpc.StreamDesc{
-		{
-			StreamName:    "SearchAnnouncements",
-			Handler:       _Announcements_SearchAnnouncements_Handler,
-			ClientStreams: true,
-		},
-		{
-			StreamName:    "CreateAnnouncement",
-			Handler:       _Announcements_CreateAnnouncement_Handler,
-			ClientStreams: true,
-		},
-		{
-			StreamName:    "AddImages",
-			Handler:       _Announcements_AddImages_Handler,
-			ClientStreams: true,
-		},
-	},
+	Streams:  []grpc.StreamDesc{},
 	Metadata: "announcements.proto",
 }

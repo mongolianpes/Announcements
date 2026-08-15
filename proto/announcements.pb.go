@@ -116,7 +116,6 @@ func (x *SearchAnnouncementsRequest) GetAuthorID() string {
 type SearchAnnouncementsResponse struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
 	AnnouncementsData []*AnnouncementData    `protobuf:"bytes,1,rep,name=announcementsData,proto3" json:"announcementsData,omitempty"`
-	Error             string                 `protobuf:"bytes,2,opt,name=error,proto3" json:"error,omitempty"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -156,13 +155,6 @@ func (x *SearchAnnouncementsResponse) GetAnnouncementsData() []*AnnouncementData
 		return x.AnnouncementsData
 	}
 	return nil
-}
-
-func (x *SearchAnnouncementsResponse) GetError() string {
-	if x != nil {
-		return x.Error
-	}
-	return ""
 }
 
 type AnnouncementData struct {
@@ -335,8 +327,7 @@ func (x *CreateAnnouncementRequest) GetAuthorID() string {
 
 type CreateAnnouncementResponse struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	Error          string                 `protobuf:"bytes,1,opt,name=error,proto3" json:"error,omitempty"`
-	AnnouncementID int32                  `protobuf:"varint,2,opt,name=announcementID,proto3" json:"announcementID,omitempty"`
+	AnnouncementID int32                  `protobuf:"varint,1,opt,name=announcementID,proto3" json:"announcementID,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -369,13 +360,6 @@ func (x *CreateAnnouncementResponse) ProtoReflect() protoreflect.Message {
 // Deprecated: Use CreateAnnouncementResponse.ProtoReflect.Descriptor instead.
 func (*CreateAnnouncementResponse) Descriptor() ([]byte, []int) {
 	return file_announcements_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *CreateAnnouncementResponse) GetError() string {
-	if x != nil {
-		return x.Error
-	}
-	return ""
 }
 
 func (x *CreateAnnouncementResponse) GetAnnouncementID() int32 {
@@ -439,7 +423,6 @@ func (x *AddImagesRequest) GetAnnouncementID() int32 {
 
 type AddImagesResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Error         string                 `protobuf:"bytes,1,opt,name=error,proto3" json:"error,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -472,13 +455,6 @@ func (x *AddImagesResponse) ProtoReflect() protoreflect.Message {
 // Deprecated: Use AddImagesResponse.ProtoReflect.Descriptor instead.
 func (*AddImagesResponse) Descriptor() ([]byte, []int) {
 	return file_announcements_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *AddImagesResponse) GetError() string {
-	if x != nil {
-		return x.Error
-	}
-	return ""
 }
 
 type DeleteAnnouncementRequest struct {
@@ -535,7 +511,6 @@ func (x *DeleteAnnouncementRequest) GetUserID() int32 {
 
 type DeleteAnnouncementResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Error         string                 `protobuf:"bytes,1,opt,name=error,proto3" json:"error,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -570,13 +545,6 @@ func (*DeleteAnnouncementResponse) Descriptor() ([]byte, []int) {
 	return file_announcements_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *DeleteAnnouncementResponse) GetError() string {
-	if x != nil {
-		return x.Error
-	}
-	return ""
-}
-
 var File_announcements_proto protoreflect.FileDescriptor
 
 const file_announcements_proto_rawDesc = "" +
@@ -589,10 +557,9 @@ const file_announcements_proto_rawDesc = "" +
 	"\bcategory\x18\x04 \x01(\tR\bcategory\x12\x18\n" +
 	"\aorderby\x18\x05 \x01(\tR\aorderby\x12&\n" +
 	"\x0eannouncementID\x18\x06 \x01(\x05R\x0eannouncementID\x12\x1a\n" +
-	"\bauthorID\x18\a \x01(\tR\bauthorID\"\x82\x01\n" +
+	"\bauthorID\x18\a \x01(\tR\bauthorID\"l\n" +
 	"\x1bSearchAnnouncementsResponse\x12M\n" +
-	"\x11announcementsData\x18\x01 \x03(\v2\x1f.announcements.AnnouncementDataR\x11announcementsData\x12\x14\n" +
-	"\x05error\x18\x02 \x01(\tR\x05error\"\x92\x02\n" +
+	"\x11announcementsData\x18\x01 \x03(\v2\x1f.announcements.AnnouncementDataR\x11announcementsData\"\x92\x02\n" +
 	"\x10AnnouncementData\x12\x1e\n" +
 	"\n" +
 	"authorName\x18\x01 \x01(\tR\n" +
@@ -608,26 +575,23 @@ const file_announcements_proto_rawDesc = "" +
 	"\x05title\x18\x01 \x01(\tR\x05title\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x1a\n" +
 	"\bcategory\x18\x03 \x01(\tR\bcategory\x12\x1a\n" +
-	"\bauthorID\x18\x04 \x01(\tR\bauthorID\"Z\n" +
-	"\x1aCreateAnnouncementResponse\x12\x14\n" +
-	"\x05error\x18\x01 \x01(\tR\x05error\x12&\n" +
-	"\x0eannouncementID\x18\x02 \x01(\x05R\x0eannouncementID\"Z\n" +
+	"\bauthorID\x18\x04 \x01(\tR\bauthorID\"D\n" +
+	"\x1aCreateAnnouncementResponse\x12&\n" +
+	"\x0eannouncementID\x18\x01 \x01(\x05R\x0eannouncementID\"Z\n" +
 	"\x10AddImagesRequest\x12\x1e\n" +
 	"\n" +
 	"imagesPath\x18\x01 \x03(\tR\n" +
 	"imagesPath\x12&\n" +
-	"\x0eannouncementID\x18\x02 \x01(\x05R\x0eannouncementID\")\n" +
-	"\x11AddImagesResponse\x12\x14\n" +
-	"\x05error\x18\x01 \x01(\tR\x05error\"[\n" +
+	"\x0eannouncementID\x18\x02 \x01(\x05R\x0eannouncementID\"\x13\n" +
+	"\x11AddImagesResponse\"[\n" +
 	"\x19DeleteAnnouncementRequest\x12&\n" +
 	"\x0eannouncementID\x18\x01 \x01(\x05R\x0eannouncementID\x12\x16\n" +
-	"\x06userID\x18\x02 \x01(\x05R\x06userID\"2\n" +
-	"\x1aDeleteAnnouncementResponse\x12\x14\n" +
-	"\x05error\x18\x01 \x01(\tR\x05error2\xa9\x03\n" +
-	"\rAnnouncements\x12n\n" +
-	"\x13SearchAnnouncements\x12).announcements.SearchAnnouncementsRequest\x1a*.announcements.SearchAnnouncementsResponse(\x01\x12k\n" +
-	"\x12CreateAnnouncement\x12(.announcements.CreateAnnouncementRequest\x1a).announcements.CreateAnnouncementResponse(\x01\x12P\n" +
-	"\tAddImages\x12\x1f.announcements.AddImagesRequest\x1a .announcements.AddImagesResponse(\x01\x12i\n" +
+	"\x06userID\x18\x02 \x01(\x05R\x06userID\"\x1c\n" +
+	"\x1aDeleteAnnouncementResponse2\xa3\x03\n" +
+	"\rAnnouncements\x12l\n" +
+	"\x13SearchAnnouncements\x12).announcements.SearchAnnouncementsRequest\x1a*.announcements.SearchAnnouncementsResponse\x12i\n" +
+	"\x12CreateAnnouncement\x12(.announcements.CreateAnnouncementRequest\x1a).announcements.CreateAnnouncementResponse\x12N\n" +
+	"\tAddImages\x12\x1f.announcements.AddImagesRequest\x1a .announcements.AddImagesResponse\x12i\n" +
 	"\x12DeleteAnnouncement\x12(.announcements.DeleteAnnouncementRequest\x1a).announcements.DeleteAnnouncementResponseB\x03Z\x01.b\x06proto3"
 
 var (
