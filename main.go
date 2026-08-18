@@ -2,15 +2,23 @@ package main
 
 import (
 	"log"
+	"log/slog"
 	"net"
 
 	"google.golang.org/grpc"
 
 	"announcements/announcements"
+	"announcements/embedding"
 	pb "announcements/proto"
 )
 
 func main() {
+	go func() {
+		if err := embedding.RunSetterDefaultEmbedding(); err != nil {
+			slog.Warn("Ошибка при обновлении стандартного (популярного эмбеддинга)", "error", err)
+		}
+	}()
+
 	announcements.ConnectToDB()
 
 	lis, err := net.Listen("tcp", ":8086")
