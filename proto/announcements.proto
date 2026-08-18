@@ -6,7 +6,7 @@ option go_package = ".";
 
 message SearchAnnouncementsRequest {
   int32 offset = 1;
-  string userID = 2;
+  int32 userID = 2;
   string searchString = 3;
   string category = 4;
   string orderby = 5;

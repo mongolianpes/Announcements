@@ -82,12 +82,8 @@ func (s *AnnouncementsServer) SearchAnnouncements(ctx context.Context, req *pb.S
 	data := &pb.SearchAnnouncementsResponse{}
 
 	if req.AnnouncementID != 0 {
-		userIDInt, err := strconv.Atoi(req.UserID)
-		if err != nil {
-			return nil, err
-		}
-
-		data.AnnouncementsData, err = getAnnouncementInfo(req.AnnouncementID, int32(userIDInt))
+		var err error
+		data.AnnouncementsData, err = getAnnouncementInfo(req.AnnouncementID, int32(req.UserID))
 		if err != nil {
 			return nil, err
 		}

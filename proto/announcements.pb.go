@@ -24,7 +24,7 @@ const (
 type SearchAnnouncementsRequest struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	Offset         int32                  `protobuf:"varint,1,opt,name=offset,proto3" json:"offset,omitempty"`
-	UserID         string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
+	UserID         int32                  `protobuf:"varint,2,opt,name=userID,proto3" json:"userID,omitempty"`
 	SearchString   string                 `protobuf:"bytes,3,opt,name=searchString,proto3" json:"searchString,omitempty"`
 	Category       string                 `protobuf:"bytes,4,opt,name=category,proto3" json:"category,omitempty"`
 	Orderby        string                 `protobuf:"bytes,5,opt,name=orderby,proto3" json:"orderby,omitempty"`
@@ -71,11 +71,11 @@ func (x *SearchAnnouncementsRequest) GetOffset() int32 {
 	return 0
 }
 
-func (x *SearchAnnouncementsRequest) GetUserID() string {
+func (x *SearchAnnouncementsRequest) GetUserID() int32 {
 	if x != nil {
 		return x.UserID
 	}
-	return ""
+	return 0
 }
 
 func (x *SearchAnnouncementsRequest) GetSearchString() string {
@@ -552,7 +552,7 @@ const file_announcements_proto_rawDesc = "" +
 	"\x13announcements.proto\x12\rannouncements\"\xea\x01\n" +
 	"\x1aSearchAnnouncementsRequest\x12\x16\n" +
 	"\x06offset\x18\x01 \x01(\x05R\x06offset\x12\x16\n" +
-	"\x06userID\x18\x02 \x01(\tR\x06userID\x12\"\n" +
+	"\x06userID\x18\x02 \x01(\x05R\x06userID\x12\"\n" +
 	"\fsearchString\x18\x03 \x01(\tR\fsearchString\x12\x1a\n" +
 	"\bcategory\x18\x04 \x01(\tR\bcategory\x12\x18\n" +
 	"\aorderby\x18\x05 \x01(\tR\aorderby\x12&\n" +
