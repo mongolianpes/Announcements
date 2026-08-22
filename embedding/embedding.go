@@ -31,9 +31,14 @@ type ollamaJsonRequest struct {
 
 var ollamaHost = os.Getenv("OLLAMA_HOST")
 
-func InsertEmbedding(db *sql.DB, rowID int, text, insertCommand string) error {
+var cantConnectToOllamaError = errors.New("Невозможно подключиться к Ollama")
+var envOSError = errors.New("Переменная OLLAMA_HOST должна иметь значение: адрес локальной нейросети ollama")
+
+const insertCommand = "UPDATE announcements SET embedding = $1::float8[] WHERE announcement_id = $2"
+
+func InsertEmbedding(db *sql.DB, rowID int, text string) error {
 	if ollamaHost == "" {
-		return errors.New("Переменная OLLAMA_HOST должна иметь значение: адрес локальной нейросети ollama")
+		return envOSError
 	}
 
 	req := ollamaJsonRequest{
@@ -48,10 +53,12 @@ func InsertEmbedding(db *sql.DB, rowID int, text, insertCommand string) error {
 
 	resp, err := client.Post(ollamaHost+"/api/embeddings", "application/json", bytes.NewBuffer(jsonBody))
 	if err != nil {
-		return err
+		saveEmbeddingText(db, rowID, text)
+
+		return cantConnectToOllamaError
 	}
 	if resp.StatusCode != http.StatusOK {
-		return errors.New("Ollama вернул статус код не 200")
+		return cantConnectToOllamaError
 	}
 
 	defer func() {
@@ -79,6 +86,57 @@ func UpdateUserEmbedding(db *sql.DB, userEmbedding, announcementEmbedding *[]flo
 
 	if _, err := db.Exec("UPDATE users SET embedding = $1::float8[] WHERE user_id = $2", userEmbedding, userID); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func saveEmbeddingText(db *sql.DB, rowID int, text string) error {
+	if _, err := db.Exec("INSERT INTO embeddings_announcements (embedding_id, text) VALUES ($1, $2)", rowID, text); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func RetryInsertEmbeddings(db *sql.DB) {
+	for {
+		runInsertSavedEmbeddings(db)
+		time.Sleep(time.Hour * 4)
+	}
+}
+
+func runInsertSavedEmbeddings(db *sql.DB) error {
+	offset := 0
+	limit := 5
+
+	for {
+		rows, err := db.Query("SELECT announcement_id, text FROM embeddings_announcements OFFSET $1 LIMIT $2", offset, limit)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				break
+			}
+			return err
+		}
+
+		var id int
+		var text string
+		for rows.Next() {
+			if err := rows.Scan(&id, &text); err != nil {
+				return err
+			}
+
+			if err := InsertEmbedding(db, id, text); err != nil {
+				if err == cantConnectToOllamaError || err == envOSError {
+					break
+				}
+
+				db.Exec("DELETE FROM embeddings_announcements WBERE announcement_id = $1", id)
+				continue
+			}
+		}
+
+		offset += 5
 	}
 
 	return nil

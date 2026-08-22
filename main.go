@@ -19,6 +19,12 @@ func main() {
 		}
 	}()
 
+	go func() {
+		if err := embedding.RunSetterDefaultEmbedding(); err != nil {
+			log.Println(err)
+		}
+	}()
+
 	announcements.ConnectToDB()
 
 	lis, err := net.Listen("tcp", ":8086")

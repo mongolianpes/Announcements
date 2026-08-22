@@ -29,7 +29,7 @@ func (s *AnnouncementsServer) CreateAnnouncement(ctx context.Context, req *pb.Cr
 		return nil, errors.New(errCause)
 	}
 
-	if err := embedding.InsertEmbedding(db, int(data.AnnouncementID), req.Title+req.Description, "UPDATE announcements SET embedding = $1::float8[] WHERE announcement_id = $2"); err != nil {
+	if err := embedding.InsertEmbedding(db, int(data.AnnouncementID), req.Title+req.Description); err != nil {
 		return nil, err
 	}
 
