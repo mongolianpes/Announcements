@@ -20,7 +20,8 @@
   rpc CreateAnnouncement(CreateAnnouncementRequest) returns (CreateAnnouncementResponse);
   rpc AddImages(AddImagesRequest) returns (AddImagesResponse);
   rpc DeleteAnnouncement(DeleteAnnouncementRequest) returns (DeleteAnnouncementResponse);
-}```
+}
+```
 Подобнее в файле Announcements/proto/announcements.proto
 
 ## Переменные окужения
