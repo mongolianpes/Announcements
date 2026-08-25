@@ -15,13 +15,16 @@
 - категория: Участки, Животноводство, Растеневодство или Другое
 
 ## RPC запросы:
-```service Announcements {
+service Announcements {
   rpc SearchAnnouncements(SearchAnnouncementsRequest) returns (SearchAnnouncementsResponse);
   rpc CreateAnnouncement(CreateAnnouncementRequest) returns (CreateAnnouncementResponse);
   rpc AddImages(AddImagesRequest) returns (AddImagesResponse);
   rpc DeleteAnnouncement(DeleteAnnouncementRequest) returns (DeleteAnnouncementResponse);
 }
+<<<<<<< HEAD
 ```
+=======
+>>>>>>> 8a882588f7d490d074da90a12272ffd63d50411f
 Подобнее в файле Announcements/proto/announcements.proto
 
 ## Переменные окужения
