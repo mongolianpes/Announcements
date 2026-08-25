@@ -15,7 +15,8 @@
 - категория: Участки, Животноводство, Растеневодство или Другое
 
 ## RPC запросы:
-```service Announcements {
+```
+service Announcements {
   rpc SearchAnnouncements(SearchAnnouncementsRequest) returns (SearchAnnouncementsResponse);
   rpc CreateAnnouncement(CreateAnnouncementRequest) returns (CreateAnnouncementResponse);
   rpc AddImages(AddImagesRequest) returns (AddImagesResponse);
