@@ -12,7 +12,6 @@ import (
 	"github.com/lib/pq"
 	"github.com/pgvector/pgvector-go"
 
-	"announcements/embedding"
 	pb "announcements/proto"
 )
 
@@ -45,20 +44,16 @@ func getAnnouncementInfo(announcementID, userID int32) ([]*pb.AnnouncementData, 
 	var description string
 	var images []string
 	var category string
-	var announcementEmbedding pgvector.Vector
+	// var announcementEmbedding pgvector.Vector
 	fmt.Println(announcementID)
-	sqlRow := db.QueryRow("SELECT title, description, announcement_author_id, images_path, category, embedding FROM announcements WHERE announcement_id = $1", announcementID)
-	if err := sqlRow.Scan(&title, &description, &authorID, pq.Array(&images), &category, &announcementEmbedding); err != nil {
+	sqlRow := db.QueryRow("SELECT title, description, announcement_author_id, images_path, category FROM announcements WHERE announcement_id = $1", announcementID)
+	if err := sqlRow.Scan(&title, &description, &authorID, pq.Array(&images), &category); err != nil {
 		return announcementData, errors.New("Нет объявления с таким id")
 	}
 
 	if err := db.QueryRow("SELECT name, embedding FROM users WHERE user_id = $1", authorID).Scan(&authorName, &userEmbedding); err != nil {
 		authorName = "Неизвестно"
 	}
-
-	userEmbeddingFloat32 := userEmbedding.Slice()
-	announcementEmbeddingFloat32 := announcementEmbedding.Slice()
-	go embedding.UpdateUserEmbedding(db, &userEmbeddingFloat32, &announcementEmbeddingFloat32, userID)
 
 	announcementData = append(announcementData, &pb.AnnouncementData{
 		AuthorName:         authorName,
@@ -70,11 +65,7 @@ func getAnnouncementInfo(announcementID, userID int32) ([]*pb.AnnouncementData, 
 		AnnouncementID:     announcementID,
 		Images:             images,
 	})
-
-	for _, a := range announcementData {
-		fmt.Println("one an", &a)
-	}
-
+	
 	return announcementData, nil
 }
 

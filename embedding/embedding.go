@@ -36,6 +36,28 @@ var envOSError = errors.New("Переменная OLLAMA_HOST должна им�
 
 const insertCommand = "UPDATE announcements SET embedding = $1::float8[] WHERE announcement_id = $2"
 
+const updateEmbeddingForTopPartnerOfAnnouncement = `
+WITH top_partner AS (
+    SELECT CASE WHEN sender_id = $1 THEN received_id ELSE sender_id END AS id
+    FROM messages
+    WHERE related_announcement_id = $2
+    GROUP BY id
+    ORDER BY COUNT(*) DESC
+    LIMIT 1
+),
+announcement AS (
+    SELECT announcement_author_id, embedding
+    FROM announcements
+    WHERE announcement_id = $2
+)
+UPDATE users u
+SET embedding = (
+    u.embedding * array_fill(0.9::real, ARRAY[vector_dims(u.embedding)])::vector
+  + a.embedding * array_fill(0.1::real, ARRAY[vector_dims(a.embedding)])::vector
+)
+FROM announcement a, top_partner tp
+WHERE u.user_id = tp.id;`
+
 func InsertEmbedding(db *sql.DB, rowID int, text string) error {
 	if ollamaHost == "" {
 		return envOSError
@@ -79,12 +101,12 @@ func InsertEmbedding(db *sql.DB, rowID int, text string) error {
 	return nil
 }
 
-func UpdateUserEmbedding(db *sql.DB, userEmbedding, announcementEmbedding *[]float32, userID int32) error {
-	for i := range *userEmbedding {
-		(*userEmbedding)[i] = float32(userAdaptationRate)*(*userEmbedding)[i] + float32(1-userAdaptationRate)*(*announcementEmbedding)[i]
+func UpdateUserEmbeddingAfterDeleteAnnouncement(db *sql.DB, authorID, announcementID int32) error {
+	if _, err := db.Exec(updateEmbeddingForTopPartnerOfAnnouncement, authorID, announcementID); err != nil {
+		return err
 	}
 
-	if _, err := db.Exec("UPDATE users SET embedding = $1::float8[] WHERE user_id = $2", userEmbedding, userID); err != nil {
+	if _, err := db.Exec("DELETE FROM announcements WHERE announcement_id = $1", announcementID); err != nil {
 		return err
 	}
 
