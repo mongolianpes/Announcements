@@ -21,11 +21,12 @@ const (
 		OR description ILIKE '%%' || $%d || '%%'
 		OR SIMILARITY(title, $%d) > 0.3
 		OR SIMILARITY(description, $%d) > 0.3)`
-	whereSnippetSQLUserID      = " (announcement_author_id = $%d)"
-	whereSnippetSQLCategory    = " (category = $%d)"
-	snippetSQLOrderByCreateAt  = " ORDER BY create_at DESC"
-	snippetSQLOrderByEmbedding = " ORDER BY embedding <=> (SELECT embedding FROM users WHERE user_id = $%d)"
-	snippetSQLOffsetAndLimit   = " OFFSET $%d LIMIT $%d"
+	whereSnippetSQLUserID                     = " (announcement_author_id = $%d)"
+	whereSnippetSQLCategory                   = " (category = $%d)"
+	snippetSQLOrderByCreateAt                 = " ORDER BY create_at DESC"
+	snippetSQLOrderByEmbedding                = " ORDER BY embedding <=> (SELECT embedding FROM users WHERE user_id = $%d)"
+	snippetSQLOrderByMyAnnouncementsEmbedding = " ORDER BY embedding <=> (SELECT AVG(embedding)::vector(768) FROM announcements WHERE announcement_author_id = $%d)"
+	snippetSQLOffsetAndLimit                  = " OFFSET $%d LIMIT $%d"
 )
 
 const (
@@ -44,7 +45,6 @@ func getAnnouncementInfo(announcementID, userID int32) ([]*pb.AnnouncementData, 
 	var description string
 	var images []string
 	var category string
-	// var announcementEmbedding pgvector.Vector
 	fmt.Println(announcementID)
 	sqlRow := db.QueryRow("SELECT title, description, announcement_author_id, images_path, category FROM announcements WHERE announcement_id = $1", announcementID)
 	if err := sqlRow.Scan(&title, &description, &authorID, pq.Array(&images), &category); err != nil {
@@ -65,7 +65,7 @@ func getAnnouncementInfo(announcementID, userID int32) ([]*pb.AnnouncementData, 
 		AnnouncementID:     announcementID,
 		Images:             images,
 	})
-	
+
 	return announcementData, nil
 }
 
@@ -105,6 +105,10 @@ func (s *AnnouncementsServer) SearchAnnouncements(ctx context.Context, req *pb.S
 
 	if req.Orderby == "new" {
 		query += snippetSQLOrderByCreateAt
+	} else if req.Orderby == "my" {
+		query += fmt.Sprintf(snippetSQLOrderByMyAnnouncementsEmbedding, countArgs)
+		args = append(args, req.UserID)
+		countArgs++
 	} else {
 		query += fmt.Sprintf(snippetSQLOrderByEmbedding, countArgs)
 		args = append(args, req.UserID)
