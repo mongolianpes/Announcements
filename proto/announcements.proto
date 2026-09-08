@@ -11,7 +11,7 @@ message SearchAnnouncementsRequest {
   string category = 4;
   string orderby = 5;
   int32 announcementID = 6;
-  string authorID = 7;
+  int32 authorID = 7;
 }
 
 message SearchAnnouncementsResponse {
@@ -33,7 +33,7 @@ message CreateAnnouncementRequest {
   string title = 1;
   string description = 2;
   string category = 3;
-  string authorID = 4;
+  int32 authorID = 4;
 }
 
 message CreateAnnouncementResponse {

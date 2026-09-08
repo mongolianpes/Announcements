@@ -91,7 +91,7 @@ func (s *AnnouncementsServer) SearchAnnouncements(ctx context.Context, req *pb.S
 		snippets, args, countArgs = combineSQLSnippets(snippets, args, countArgs, whereSnippetSQLSearchString, req.SearchString)
 	}
 
-	if req.AuthorID != "" {
+	if req.AuthorID != 0 {
 		snippets, args, countArgs = combineSQLSnippets(snippets, args, countArgs, whereSnippetSQLUserID, req.AuthorID)
 	}
 

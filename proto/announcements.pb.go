@@ -29,7 +29,7 @@ type SearchAnnouncementsRequest struct {
 	Category       string                 `protobuf:"bytes,4,opt,name=category,proto3" json:"category,omitempty"`
 	Orderby        string                 `protobuf:"bytes,5,opt,name=orderby,proto3" json:"orderby,omitempty"`
 	AnnouncementID int32                  `protobuf:"varint,6,opt,name=announcementID,proto3" json:"announcementID,omitempty"`
-	AuthorID       string                 `protobuf:"bytes,7,opt,name=authorID,proto3" json:"authorID,omitempty"`
+	AuthorID       int32                  `protobuf:"varint,7,opt,name=authorID,proto3" json:"authorID,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -106,11 +106,11 @@ func (x *SearchAnnouncementsRequest) GetAnnouncementID() int32 {
 	return 0
 }
 
-func (x *SearchAnnouncementsRequest) GetAuthorID() string {
+func (x *SearchAnnouncementsRequest) GetAuthorID() int32 {
 	if x != nil {
 		return x.AuthorID
 	}
-	return ""
+	return 0
 }
 
 type SearchAnnouncementsResponse struct {
@@ -262,7 +262,7 @@ type CreateAnnouncementRequest struct {
 	Title         string                 `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
 	Description   string                 `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
 	Category      string                 `protobuf:"bytes,3,opt,name=category,proto3" json:"category,omitempty"`
-	AuthorID      string                 `protobuf:"bytes,4,opt,name=authorID,proto3" json:"authorID,omitempty"`
+	AuthorID      int32                  `protobuf:"varint,4,opt,name=authorID,proto3" json:"authorID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -318,11 +318,11 @@ func (x *CreateAnnouncementRequest) GetCategory() string {
 	return ""
 }
 
-func (x *CreateAnnouncementRequest) GetAuthorID() string {
+func (x *CreateAnnouncementRequest) GetAuthorID() int32 {
 	if x != nil {
 		return x.AuthorID
 	}
-	return ""
+	return 0
 }
 
 type CreateAnnouncementResponse struct {
@@ -557,7 +557,7 @@ const file_announcements_proto_rawDesc = "" +
 	"\bcategory\x18\x04 \x01(\tR\bcategory\x12\x18\n" +
 	"\aorderby\x18\x05 \x01(\tR\aorderby\x12&\n" +
 	"\x0eannouncementID\x18\x06 \x01(\x05R\x0eannouncementID\x12\x1a\n" +
-	"\bauthorID\x18\a \x01(\tR\bauthorID\"l\n" +
+	"\bauthorID\x18\a \x01(\x05R\bauthorID\"l\n" +
 	"\x1bSearchAnnouncementsResponse\x12M\n" +
 	"\x11announcementsData\x18\x01 \x03(\v2\x1f.announcements.AnnouncementDataR\x11announcementsData\"\x92\x02\n" +
 	"\x10AnnouncementData\x12\x1e\n" +
@@ -575,7 +575,7 @@ const file_announcements_proto_rawDesc = "" +
 	"\x05title\x18\x01 \x01(\tR\x05title\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x1a\n" +
 	"\bcategory\x18\x03 \x01(\tR\bcategory\x12\x1a\n" +
-	"\bauthorID\x18\x04 \x01(\tR\bauthorID\"D\n" +
+	"\bauthorID\x18\x04 \x01(\x05R\bauthorID\"D\n" +
 	"\x1aCreateAnnouncementResponse\x12&\n" +
 	"\x0eannouncementID\x18\x01 \x01(\x05R\x0eannouncementID\"Z\n" +
 	"\x10AddImagesRequest\x12\x1e\n" +
