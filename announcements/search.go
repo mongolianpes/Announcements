@@ -35,7 +35,7 @@ const (
 
 var imagesServiceExternalConnections string
 
-func getAnnouncementInfo(announcementID, userID int32) ([]*pb.AnnouncementData, error) {
+func getAnnouncementInfo(announcementID int32) ([]*pb.AnnouncementData, error) {
 	announcementData := []*pb.AnnouncementData{}
 
 	var authorID int
@@ -74,7 +74,7 @@ func (s *AnnouncementsServer) SearchAnnouncements(ctx context.Context, req *pb.S
 
 	if req.AnnouncementID != 0 {
 		var err error
-		data.AnnouncementsData, err = getAnnouncementInfo(req.AnnouncementID, int32(req.UserID))
+		data.AnnouncementsData, err = getAnnouncementInfo(req.AnnouncementID)
 		if err != nil {
 			return nil, err
 		}
