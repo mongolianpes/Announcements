@@ -23,13 +23,13 @@ const (
 
 type SearchAnnouncementsRequest struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	Offset         int32                  `protobuf:"varint,1,opt,name=offset,proto3" json:"offset,omitempty"`
-	UserID         int32                  `protobuf:"varint,2,opt,name=userID,proto3" json:"userID,omitempty"`
+	Offset         int64                  `protobuf:"varint,1,opt,name=offset,proto3" json:"offset,omitempty"`
+	UserID         int64                  `protobuf:"varint,2,opt,name=userID,proto3" json:"userID,omitempty"`
 	SearchString   string                 `protobuf:"bytes,3,opt,name=searchString,proto3" json:"searchString,omitempty"`
 	Category       string                 `protobuf:"bytes,4,opt,name=category,proto3" json:"category,omitempty"`
 	Orderby        string                 `protobuf:"bytes,5,opt,name=orderby,proto3" json:"orderby,omitempty"`
-	AnnouncementID int32                  `protobuf:"varint,6,opt,name=announcementID,proto3" json:"announcementID,omitempty"`
-	AuthorID       int32                  `protobuf:"varint,7,opt,name=authorID,proto3" json:"authorID,omitempty"`
+	AnnouncementID int64                  `protobuf:"varint,6,opt,name=announcementID,proto3" json:"announcementID,omitempty"`
+	AuthorID       int64                  `protobuf:"varint,7,opt,name=authorID,proto3" json:"authorID,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -64,14 +64,14 @@ func (*SearchAnnouncementsRequest) Descriptor() ([]byte, []int) {
 	return file_announcements_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *SearchAnnouncementsRequest) GetOffset() int32 {
+func (x *SearchAnnouncementsRequest) GetOffset() int64 {
 	if x != nil {
 		return x.Offset
 	}
 	return 0
 }
 
-func (x *SearchAnnouncementsRequest) GetUserID() int32 {
+func (x *SearchAnnouncementsRequest) GetUserID() int64 {
 	if x != nil {
 		return x.UserID
 	}
@@ -99,14 +99,14 @@ func (x *SearchAnnouncementsRequest) GetOrderby() string {
 	return ""
 }
 
-func (x *SearchAnnouncementsRequest) GetAnnouncementID() int32 {
+func (x *SearchAnnouncementsRequest) GetAnnouncementID() int64 {
 	if x != nil {
 		return x.AnnouncementID
 	}
 	return 0
 }
 
-func (x *SearchAnnouncementsRequest) GetAuthorID() int32 {
+func (x *SearchAnnouncementsRequest) GetAuthorID() int64 {
 	if x != nil {
 		return x.AuthorID
 	}
@@ -160,12 +160,12 @@ func (x *SearchAnnouncementsResponse) GetAnnouncementsData() []*AnnouncementData
 type AnnouncementData struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
 	AuthorName         string                 `protobuf:"bytes,1,opt,name=authorName,proto3" json:"authorName,omitempty"`
-	AuthorID           int32                  `protobuf:"varint,2,opt,name=authorID,proto3" json:"authorID,omitempty"`
+	AuthorID           int64                  `protobuf:"varint,2,opt,name=authorID,proto3" json:"authorID,omitempty"`
 	Title              string                 `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
 	Description        string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
 	Category           string                 `protobuf:"bytes,5,opt,name=category,proto3" json:"category,omitempty"`
 	LinkToAnnouncement string                 `protobuf:"bytes,6,opt,name=linkToAnnouncement,proto3" json:"linkToAnnouncement,omitempty"`
-	AnnouncementID     int32                  `protobuf:"varint,7,opt,name=announcementID,proto3" json:"announcementID,omitempty"`
+	AnnouncementID     int64                  `protobuf:"varint,7,opt,name=announcementID,proto3" json:"announcementID,omitempty"`
 	Images             []string               `protobuf:"bytes,8,rep,name=images,proto3" json:"images,omitempty"`
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
@@ -208,7 +208,7 @@ func (x *AnnouncementData) GetAuthorName() string {
 	return ""
 }
 
-func (x *AnnouncementData) GetAuthorID() int32 {
+func (x *AnnouncementData) GetAuthorID() int64 {
 	if x != nil {
 		return x.AuthorID
 	}
@@ -243,7 +243,7 @@ func (x *AnnouncementData) GetLinkToAnnouncement() string {
 	return ""
 }
 
-func (x *AnnouncementData) GetAnnouncementID() int32 {
+func (x *AnnouncementData) GetAnnouncementID() int64 {
 	if x != nil {
 		return x.AnnouncementID
 	}
@@ -262,7 +262,7 @@ type CreateAnnouncementRequest struct {
 	Title         string                 `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
 	Description   string                 `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
 	Category      string                 `protobuf:"bytes,3,opt,name=category,proto3" json:"category,omitempty"`
-	AuthorID      int32                  `protobuf:"varint,4,opt,name=authorID,proto3" json:"authorID,omitempty"`
+	AuthorID      int64                  `protobuf:"varint,4,opt,name=authorID,proto3" json:"authorID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -318,7 +318,7 @@ func (x *CreateAnnouncementRequest) GetCategory() string {
 	return ""
 }
 
-func (x *CreateAnnouncementRequest) GetAuthorID() int32 {
+func (x *CreateAnnouncementRequest) GetAuthorID() int64 {
 	if x != nil {
 		return x.AuthorID
 	}
@@ -327,7 +327,7 @@ func (x *CreateAnnouncementRequest) GetAuthorID() int32 {
 
 type CreateAnnouncementResponse struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	AnnouncementID int32                  `protobuf:"varint,1,opt,name=announcementID,proto3" json:"announcementID,omitempty"`
+	AnnouncementID int64                  `protobuf:"varint,1,opt,name=announcementID,proto3" json:"announcementID,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -362,7 +362,7 @@ func (*CreateAnnouncementResponse) Descriptor() ([]byte, []int) {
 	return file_announcements_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *CreateAnnouncementResponse) GetAnnouncementID() int32 {
+func (x *CreateAnnouncementResponse) GetAnnouncementID() int64 {
 	if x != nil {
 		return x.AnnouncementID
 	}
@@ -372,7 +372,7 @@ func (x *CreateAnnouncementResponse) GetAnnouncementID() int32 {
 type AddImagesRequest struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	ImagesPath     []string               `protobuf:"bytes,1,rep,name=imagesPath,proto3" json:"imagesPath,omitempty"`
-	AnnouncementID int32                  `protobuf:"varint,2,opt,name=announcementID,proto3" json:"announcementID,omitempty"`
+	AnnouncementID int64                  `protobuf:"varint,2,opt,name=announcementID,proto3" json:"announcementID,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -414,7 +414,7 @@ func (x *AddImagesRequest) GetImagesPath() []string {
 	return nil
 }
 
-func (x *AddImagesRequest) GetAnnouncementID() int32 {
+func (x *AddImagesRequest) GetAnnouncementID() int64 {
 	if x != nil {
 		return x.AnnouncementID
 	}
@@ -459,8 +459,8 @@ func (*AddImagesResponse) Descriptor() ([]byte, []int) {
 
 type DeleteAnnouncementRequest struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	AnnouncementID int32                  `protobuf:"varint,1,opt,name=announcementID,proto3" json:"announcementID,omitempty"`
-	UserID         int32                  `protobuf:"varint,2,opt,name=userID,proto3" json:"userID,omitempty"`
+	AnnouncementID int64                  `protobuf:"varint,1,opt,name=announcementID,proto3" json:"announcementID,omitempty"`
+	UserID         int64                  `protobuf:"varint,2,opt,name=userID,proto3" json:"userID,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -495,14 +495,14 @@ func (*DeleteAnnouncementRequest) Descriptor() ([]byte, []int) {
 	return file_announcements_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *DeleteAnnouncementRequest) GetAnnouncementID() int32 {
+func (x *DeleteAnnouncementRequest) GetAnnouncementID() int64 {
 	if x != nil {
 		return x.AnnouncementID
 	}
 	return 0
 }
 
-func (x *DeleteAnnouncementRequest) GetUserID() int32 {
+func (x *DeleteAnnouncementRequest) GetUserID() int64 {
 	if x != nil {
 		return x.UserID
 	}
@@ -551,42 +551,42 @@ const file_announcements_proto_rawDesc = "" +
 	"\n" +
 	"\x13announcements.proto\x12\rannouncements\"\xea\x01\n" +
 	"\x1aSearchAnnouncementsRequest\x12\x16\n" +
-	"\x06offset\x18\x01 \x01(\x05R\x06offset\x12\x16\n" +
-	"\x06userID\x18\x02 \x01(\x05R\x06userID\x12\"\n" +
+	"\x06offset\x18\x01 \x01(\x03R\x06offset\x12\x16\n" +
+	"\x06userID\x18\x02 \x01(\x03R\x06userID\x12\"\n" +
 	"\fsearchString\x18\x03 \x01(\tR\fsearchString\x12\x1a\n" +
 	"\bcategory\x18\x04 \x01(\tR\bcategory\x12\x18\n" +
 	"\aorderby\x18\x05 \x01(\tR\aorderby\x12&\n" +
-	"\x0eannouncementID\x18\x06 \x01(\x05R\x0eannouncementID\x12\x1a\n" +
-	"\bauthorID\x18\a \x01(\x05R\bauthorID\"l\n" +
+	"\x0eannouncementID\x18\x06 \x01(\x03R\x0eannouncementID\x12\x1a\n" +
+	"\bauthorID\x18\a \x01(\x03R\bauthorID\"l\n" +
 	"\x1bSearchAnnouncementsResponse\x12M\n" +
 	"\x11announcementsData\x18\x01 \x03(\v2\x1f.announcements.AnnouncementDataR\x11announcementsData\"\x92\x02\n" +
 	"\x10AnnouncementData\x12\x1e\n" +
 	"\n" +
 	"authorName\x18\x01 \x01(\tR\n" +
 	"authorName\x12\x1a\n" +
-	"\bauthorID\x18\x02 \x01(\x05R\bauthorID\x12\x14\n" +
+	"\bauthorID\x18\x02 \x01(\x03R\bauthorID\x12\x14\n" +
 	"\x05title\x18\x03 \x01(\tR\x05title\x12 \n" +
 	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x1a\n" +
 	"\bcategory\x18\x05 \x01(\tR\bcategory\x12.\n" +
 	"\x12linkToAnnouncement\x18\x06 \x01(\tR\x12linkToAnnouncement\x12&\n" +
-	"\x0eannouncementID\x18\a \x01(\x05R\x0eannouncementID\x12\x16\n" +
+	"\x0eannouncementID\x18\a \x01(\x03R\x0eannouncementID\x12\x16\n" +
 	"\x06images\x18\b \x03(\tR\x06images\"\x8b\x01\n" +
 	"\x19CreateAnnouncementRequest\x12\x14\n" +
 	"\x05title\x18\x01 \x01(\tR\x05title\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x1a\n" +
 	"\bcategory\x18\x03 \x01(\tR\bcategory\x12\x1a\n" +
-	"\bauthorID\x18\x04 \x01(\x05R\bauthorID\"D\n" +
+	"\bauthorID\x18\x04 \x01(\x03R\bauthorID\"D\n" +
 	"\x1aCreateAnnouncementResponse\x12&\n" +
-	"\x0eannouncementID\x18\x01 \x01(\x05R\x0eannouncementID\"Z\n" +
+	"\x0eannouncementID\x18\x01 \x01(\x03R\x0eannouncementID\"Z\n" +
 	"\x10AddImagesRequest\x12\x1e\n" +
 	"\n" +
 	"imagesPath\x18\x01 \x03(\tR\n" +
 	"imagesPath\x12&\n" +
-	"\x0eannouncementID\x18\x02 \x01(\x05R\x0eannouncementID\"\x13\n" +
+	"\x0eannouncementID\x18\x02 \x01(\x03R\x0eannouncementID\"\x13\n" +
 	"\x11AddImagesResponse\"[\n" +
 	"\x19DeleteAnnouncementRequest\x12&\n" +
-	"\x0eannouncementID\x18\x01 \x01(\x05R\x0eannouncementID\x12\x16\n" +
-	"\x06userID\x18\x02 \x01(\x05R\x06userID\"\x1c\n" +
+	"\x0eannouncementID\x18\x01 \x01(\x03R\x0eannouncementID\x12\x16\n" +
+	"\x06userID\x18\x02 \x01(\x03R\x06userID\"\x1c\n" +
 	"\x1aDeleteAnnouncementResponse2\xa3\x03\n" +
 	"\rAnnouncements\x12l\n" +
 	"\x13SearchAnnouncements\x12).announcements.SearchAnnouncementsRequest\x1a*.announcements.SearchAnnouncementsResponse\x12i\n" +
