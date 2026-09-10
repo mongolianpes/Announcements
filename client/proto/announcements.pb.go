@@ -23,12 +23,12 @@ const (
 
 type SearchAnnouncementsRequest struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	Offset         int32                  `protobuf:"varint,1,opt,name=offset,proto3" json:"offset,omitempty"`
+	Offset         int64                  `protobuf:"varint,1,opt,name=offset,proto3" json:"offset,omitempty"`
 	UserID         string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
 	SearchString   string                 `protobuf:"bytes,3,opt,name=searchString,proto3" json:"searchString,omitempty"`
 	Category       string                 `protobuf:"bytes,4,opt,name=category,proto3" json:"category,omitempty"`
 	Orderby        string                 `protobuf:"bytes,5,opt,name=orderby,proto3" json:"orderby,omitempty"`
-	AnnouncementID int32                  `protobuf:"varint,6,opt,name=announcementID,proto3" json:"announcementID,omitempty"`
+	AnnouncementID int64                  `protobuf:"varint,6,opt,name=announcementID,proto3" json:"announcementID,omitempty"`
 	AuthorID       string                 `protobuf:"bytes,7,opt,name=authorID,proto3" json:"authorID,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
@@ -64,7 +64,7 @@ func (*SearchAnnouncementsRequest) Descriptor() ([]byte, []int) {
 	return file_announcements_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *SearchAnnouncementsRequest) GetOffset() int32 {
+func (x *SearchAnnouncementsRequest) GetOffset() int64 {
 	if x != nil {
 		return x.Offset
 	}
@@ -99,7 +99,7 @@ func (x *SearchAnnouncementsRequest) GetOrderby() string {
 	return ""
 }
 
-func (x *SearchAnnouncementsRequest) GetAnnouncementID() int32 {
+func (x *SearchAnnouncementsRequest) GetAnnouncementID() int64 {
 	if x != nil {
 		return x.AnnouncementID
 	}
@@ -168,12 +168,12 @@ func (x *SearchAnnouncementsResponse) GetError() string {
 type AnnouncementData struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
 	AuthorName         string                 `protobuf:"bytes,1,opt,name=authorName,proto3" json:"authorName,omitempty"`
-	AuthorID           int32                  `protobuf:"varint,2,opt,name=authorID,proto3" json:"authorID,omitempty"`
+	AuthorID           int64                  `protobuf:"varint,2,opt,name=authorID,proto3" json:"authorID,omitempty"`
 	Title              string                 `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
 	Description        string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
 	Category           string                 `protobuf:"bytes,5,opt,name=category,proto3" json:"category,omitempty"`
 	LinkToAnnouncement string                 `protobuf:"bytes,6,opt,name=linkToAnnouncement,proto3" json:"linkToAnnouncement,omitempty"`
-	AnnouncementID     int32                  `protobuf:"varint,7,opt,name=announcementID,proto3" json:"announcementID,omitempty"`
+	AnnouncementID     int64                  `protobuf:"varint,7,opt,name=announcementID,proto3" json:"announcementID,omitempty"`
 	Images             []string               `protobuf:"bytes,8,rep,name=images,proto3" json:"images,omitempty"`
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
@@ -216,7 +216,7 @@ func (x *AnnouncementData) GetAuthorName() string {
 	return ""
 }
 
-func (x *AnnouncementData) GetAuthorID() int32 {
+func (x *AnnouncementData) GetAuthorID() int64 {
 	if x != nil {
 		return x.AuthorID
 	}
@@ -251,7 +251,7 @@ func (x *AnnouncementData) GetLinkToAnnouncement() string {
 	return ""
 }
 
-func (x *AnnouncementData) GetAnnouncementID() int32 {
+func (x *AnnouncementData) GetAnnouncementID() int64 {
 	if x != nil {
 		return x.AnnouncementID
 	}
@@ -336,7 +336,7 @@ func (x *CreateAnnouncementRequest) GetAuthorID() string {
 type CreateAnnouncementResponse struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	Error          string                 `protobuf:"bytes,1,opt,name=error,proto3" json:"error,omitempty"`
-	AnnouncementID int32                  `protobuf:"varint,2,opt,name=announcementID,proto3" json:"announcementID,omitempty"`
+	AnnouncementID int64                  `protobuf:"varint,2,opt,name=announcementID,proto3" json:"announcementID,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -378,7 +378,7 @@ func (x *CreateAnnouncementResponse) GetError() string {
 	return ""
 }
 
-func (x *CreateAnnouncementResponse) GetAnnouncementID() int32 {
+func (x *CreateAnnouncementResponse) GetAnnouncementID() int64 {
 	if x != nil {
 		return x.AnnouncementID
 	}
@@ -388,7 +388,7 @@ func (x *CreateAnnouncementResponse) GetAnnouncementID() int32 {
 type AddImagesRequest struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	ImagesPath     []string               `protobuf:"bytes,1,rep,name=imagesPath,proto3" json:"imagesPath,omitempty"`
-	AnnouncementID int32                  `protobuf:"varint,2,opt,name=announcementID,proto3" json:"announcementID,omitempty"`
+	AnnouncementID int64                  `protobuf:"varint,2,opt,name=announcementID,proto3" json:"announcementID,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -430,7 +430,7 @@ func (x *AddImagesRequest) GetImagesPath() []string {
 	return nil
 }
 
-func (x *AddImagesRequest) GetAnnouncementID() int32 {
+func (x *AddImagesRequest) GetAnnouncementID() int64 {
 	if x != nil {
 		return x.AnnouncementID
 	}
@@ -483,7 +483,7 @@ func (x *AddImagesResponse) GetError() string {
 
 type DeleteAnnouncementRequest struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	AnnouncementID int32                  `protobuf:"varint,1,opt,name=announcementID,proto3" json:"announcementID,omitempty"`
+	AnnouncementID int64                  `protobuf:"varint,1,opt,name=announcementID,proto3" json:"announcementID,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -518,7 +518,7 @@ func (*DeleteAnnouncementRequest) Descriptor() ([]byte, []int) {
 	return file_announcements_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *DeleteAnnouncementRequest) GetAnnouncementID() int32 {
+func (x *DeleteAnnouncementRequest) GetAnnouncementID() int64 {
 	if x != nil {
 		return x.AnnouncementID
 	}
@@ -645,7 +645,7 @@ var file_announcements_proto_goTypes = []any{
 	(*DeleteAnnouncementRequest)(nil),   // 7: announcements.DeleteAnnouncementRequest
 	(*DeleteAnnouncementResponse)(nil),  // 8: announcements.DeleteAnnouncementResponse
 }
-var file_announcements_proto_depIdxs = []int32{
+var file_announcements_proto_depIdxs = []int64{
 	2, // 0: announcements.SearchAnnouncementsResponse.announcementsData:type_name -> announcements.AnnouncementData
 	0, // 1: announcements.Announcements.SearchAnnouncements:input_type -> announcements.SearchAnnouncementsRequest
 	3, // 2: announcements.Announcements.CreateAnnouncement:input_type -> announcements.CreateAnnouncementRequest

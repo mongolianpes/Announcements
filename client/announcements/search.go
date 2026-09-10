@@ -16,13 +16,13 @@ func SearchAnnouncements(offset, announcementID int, userID, SearchString, login
 	}
 
 	req := &pb.SearchAnnouncementsRequest{
-		Offset:         int32(offset),
+		Offset:         int64(offset),
 		UserID:         userID,
 		SearchString:   SearchString,
 		Login:          login,
 		Category:       category,
 		Orderby:        orderBy,
-		AnnouncementID: int32(announcementID),
+		AnnouncementID: int64(announcementID),
 	}
 
 	if err := stream.Send(req); err != nil {

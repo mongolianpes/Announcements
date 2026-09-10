@@ -5,12 +5,12 @@ package announcements;
 option go_package = ".";
 
 message SearchAnnouncementsRequest {
-  int32 offset = 1;
+  int64 offset = 1;
   string userID = 2;
   string searchString = 3;
   string category = 4;
   string orderby = 5;
-  int32 announcementID = 6;
+  int64 announcementID = 6;
   string authorID = 7;
 }
 
@@ -21,12 +21,12 @@ message SearchAnnouncementsResponse {
 
 message AnnouncementData {
   string authorName = 1;
-  int32 authorID = 2;
+  int64 authorID = 2;
   string title = 3;
   string description = 4;
   string category = 5;
   string linkToAnnouncement = 6;
-  int32 announcementID = 7;
+  int64 announcementID = 7;
   repeated string images = 8;
 }
 
@@ -39,12 +39,12 @@ message CreateAnnouncementRequest {
 
 message CreateAnnouncementResponse {
   string error = 1;
-  int32 announcementID = 2;
+  int64 announcementID = 2;
 }
 
 message AddImagesRequest {
   repeated string imagesPath = 1;
-  int32 announcementID = 2;
+  int64 announcementID = 2;
 }
 
 message AddImagesResponse {
@@ -52,7 +52,7 @@ message AddImagesResponse {
 }
 
 message DeleteAnnouncementRequest {
-  int32 announcementID = 1;
+  int64 announcementID = 1;
 }
 
 message DeleteAnnouncementResponse {

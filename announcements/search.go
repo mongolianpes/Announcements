@@ -35,7 +35,7 @@ const (
 
 var imagesServiceExternalConnections string
 
-func getAnnouncementInfo(announcementID int32) ([]*pb.AnnouncementData, error) {
+func getAnnouncementInfo(announcementID int64) ([]*pb.AnnouncementData, error) {
 	announcementData := []*pb.AnnouncementData{}
 
 	var authorID int
@@ -57,7 +57,7 @@ func getAnnouncementInfo(announcementID int32) ([]*pb.AnnouncementData, error) {
 
 	announcementData = append(announcementData, &pb.AnnouncementData{
 		AuthorName:         authorName,
-		AuthorID:           int32(authorID),
+		AuthorID:           int64(authorID),
 		Title:              title,
 		Description:        description,
 		Category:           category,
@@ -163,7 +163,7 @@ func (s *AnnouncementsServer) SearchAnnouncements(ctx context.Context, req *pb.S
 			Category:           category,
 			LinkToAnnouncement: "/announcements?id=" + strconv.Itoa(announcementID),
 			Images:             firstImagesPathSlice,
-			AnnouncementID:     int32(announcementID),
+			AnnouncementID:     int64(announcementID),
 		})
 	}
 

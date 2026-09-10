@@ -14,7 +14,7 @@ func DeleteAnnouncement(id int) error {
 	}
 
 	req := &pb.DeleteAnnouncementRequest{
-		AnnouncementID: int32(id),
+		AnnouncementID: int64(id),
 	}
 
 	if err := stream.Send(req); err != nil {

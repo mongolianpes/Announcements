@@ -205,7 +205,7 @@ func TestDeleteAnnouncement(t *testing.T) {
 		t.Fatal("Вернул невалид эмбеддинг")
 	}
 
-	if err := UpdateUserEmbeddingAfterDeleteAnnouncement(db, int32(upd.usersIDs[0]), int32(upd.announcementsIDs[0])); err != nil {
+	if err := UpdateUserEmbeddingAfterDeleteAnnouncement(db, int64(upd.usersIDs[0]), int64(upd.announcementsIDs[0])); err != nil {
 		t.Error(err)
 	}
 
@@ -240,7 +240,7 @@ func TestDeleteAnnouncement(t *testing.T) {
 		t.Error(err)
 	}
 
-	if err := UpdateUserEmbeddingAfterDeleteAnnouncement(db, int32(upd.usersIDs[1]), int32(upd.announcementsIDs[1])); err != nil {
+	if err := UpdateUserEmbeddingAfterDeleteAnnouncement(db, int64(upd.usersIDs[1]), int64(upd.announcementsIDs[1])); err != nil {
 		t.Error(err)
 	}
 }

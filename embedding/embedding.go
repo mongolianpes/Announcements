@@ -101,7 +101,7 @@ func InsertEmbedding(db *sql.DB, rowID int, text string) error {
 	return nil
 }
 
-func UpdateUserEmbeddingAfterDeleteAnnouncement(db *sql.DB, authorID, announcementID int32) error {
+func UpdateUserEmbeddingAfterDeleteAnnouncement(db *sql.DB, authorID, announcementID int64) error {
 	if _, err := db.Exec(updateEmbeddingForTopPartnerOfAnnouncement, authorID, announcementID); err != nil {
 		return err
 	}
