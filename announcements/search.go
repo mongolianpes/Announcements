@@ -45,7 +45,6 @@ func getAnnouncementInfo(announcementID int64) ([]*pb.AnnouncementData, error) {
 	var description string
 	var images []string
 	var category string
-	fmt.Println(announcementID)
 	sqlRow := db.QueryRow("SELECT title, description, announcement_author_id, images_path, category FROM announcements WHERE announcement_id = $1", announcementID)
 	if err := sqlRow.Scan(&title, &description, &authorID, pq.Array(&images), &category); err != nil {
 		return announcementData, errors.New("Нет объявления с таким id")
