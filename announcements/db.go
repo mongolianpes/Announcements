@@ -9,12 +9,6 @@ import (
 var db *sql.DB
 
 func ConnectToDB() {
-	// host := "localhost"
-	// port := "5432"
-	// user := "postgres"
-	// password := "123"
-	// dbname := "project_farm"
-
 	host := os.Getenv("DB_HOST")
 	port := os.Getenv("DB_PORT")
 	user := os.Getenv("DB_USER")
