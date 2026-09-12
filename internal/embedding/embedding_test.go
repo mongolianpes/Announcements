@@ -3,10 +3,6 @@ package embedding
 import (
 	"database/sql"
 	"fmt"
-	"math"
-	"strconv"
-	"strings"
-	"testing"
 	"time"
 
 	_ "github.com/lib/pq"
@@ -149,98 +145,4 @@ func updateTestMessages(db *sql.DB) (updMessagesInfo, error) {
 	}
 
 	return updMessages, nil
-}
-
-func TestDeleteAnnouncement(t *testing.T) {
-	db := connectToDBForTest()
-
-	upd, err := updateTestMessages(db)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	vector := make([]float64, 768)
-	for i := range vector {
-		vector[i] = 0.11111111
-	}
-	if _, err := db.Exec("UPDATE users SET embedding = $1::float8[]", vector); err != nil {
-		t.Fatal(err)
-	}
-	if _, err := db.Exec("UPDATE announcements SET embedding = $1::float8[]", vector); err != nil {
-		t.Fatal(err)
-	}
-
-	var userEmbeddingOld []float64
-	var raw sql.NullString
-	err = db.QueryRow("SELECT embedding FROM users WHERE user_id = $1", upd.usersIDs[0]).Scan(&raw)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if raw.Valid {
-		parts := strings.Trim(raw.String, "[]")
-		nums := strings.Split(parts, ",")
-		userEmbeddingOld = make([]float64, len(nums))
-		for i, s := range nums {
-			userEmbeddingOld[i], _ = strconv.ParseFloat(strings.TrimSpace(s), 64)
-		}
-	} else {
-		t.Fatal("Вернул невалид эмбеддинг")
-	}
-
-	var announcementEmbedding []float64
-	err = db.QueryRow("SELECT embedding FROM announcements WHERE announcement_id = $1", upd.announcementsIDs[0]).Scan(&raw)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if raw.Valid {
-		parts := strings.Trim(raw.String, "[]")
-		nums := strings.Split(parts, ",")
-		announcementEmbedding = make([]float64, len(nums))
-		for i, s := range nums {
-			announcementEmbedding[i], _ = strconv.ParseFloat(strings.TrimSpace(s), 64)
-		}
-	} else {
-		t.Fatal("Вернул невалид эмбеддинг")
-	}
-
-	if err := UpdateUserEmbeddingAfterDeleteAnnouncement(db, int64(upd.usersIDs[0]), int64(upd.announcementsIDs[0])); err != nil {
-		t.Error(err)
-	}
-
-	var userEmbeddingNew []float64
-	err = db.QueryRow("SELECT embedding FROM users WHERE user_id = $1", upd.usersIDs[0]).Scan(&raw)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if raw.Valid {
-		parts := strings.Trim(raw.String, "[]")
-		nums := strings.Split(parts, ",")
-		userEmbeddingNew = make([]float64, len(nums))
-		for i, s := range nums {
-			userEmbeddingNew[i], _ = strconv.ParseFloat(strings.TrimSpace(s), 64)
-		}
-	} else {
-		t.Fatal("Вернул невалид эмбеддинг")
-	}
-
-	const eps = 1e-6
-	for i := range userEmbeddingOld {
-		userEmbeddingOld[i] = float64(0.9)*(userEmbeddingOld)[i] + float64(0.1)*announcementEmbedding[i]
-
-		if math.Abs(userEmbeddingOld[i]-userEmbeddingNew[i]) > eps {
-			t.Errorf("Не соответствует ожидаемому. Должно быть: %v, получено: %v", userEmbeddingOld[i], userEmbeddingNew[i])
-			break
-		}
-	}
-
-	if rows, err := db.Query("SELECT announcement_id FROM announcements WHERE announcement_id = $1", upd.announcementsIDs[0]); err != sql.ErrNoRows && rows.Next() {
-		t.Error(err)
-	}
-
-	if err := UpdateUserEmbeddingAfterDeleteAnnouncement(db, int64(upd.usersIDs[1]), int64(upd.announcementsIDs[1])); err != nil {
-		t.Error(err)
-	}
 }

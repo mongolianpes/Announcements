@@ -19,14 +19,13 @@ message SearchAnnouncementsResponse {
 }
 
 message AnnouncementData {
-  string authorName = 1;
-  int64 authorID = 2;
-  string title = 3;
-  string description = 4;
-  string category = 5;
-  string linkToAnnouncement = 6;
-  int64 announcementID = 7;
-  repeated string images = 8;
+  int64 authorID = 1;
+  string title = 2;
+  string description = 3;
+  string category = 4;
+  string linkToAnnouncement = 5;
+  int64 announcementID = 6;
+  repeated string images = 7;
 }
 
 message CreateAnnouncementRequest {

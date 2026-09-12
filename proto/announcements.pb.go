@@ -159,14 +159,13 @@ func (x *SearchAnnouncementsResponse) GetAnnouncementsData() []*AnnouncementData
 
 type AnnouncementData struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
-	AuthorName         string                 `protobuf:"bytes,1,opt,name=authorName,proto3" json:"authorName,omitempty"`
-	AuthorID           int64                  `protobuf:"varint,2,opt,name=authorID,proto3" json:"authorID,omitempty"`
-	Title              string                 `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
-	Description        string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
-	Category           string                 `protobuf:"bytes,5,opt,name=category,proto3" json:"category,omitempty"`
-	LinkToAnnouncement string                 `protobuf:"bytes,6,opt,name=linkToAnnouncement,proto3" json:"linkToAnnouncement,omitempty"`
-	AnnouncementID     int64                  `protobuf:"varint,7,opt,name=announcementID,proto3" json:"announcementID,omitempty"`
-	Images             []string               `protobuf:"bytes,8,rep,name=images,proto3" json:"images,omitempty"`
+	AuthorID           int64                  `protobuf:"varint,1,opt,name=authorID,proto3" json:"authorID,omitempty"`
+	Title              string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	Description        string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	Category           string                 `protobuf:"bytes,4,opt,name=category,proto3" json:"category,omitempty"`
+	LinkToAnnouncement string                 `protobuf:"bytes,5,opt,name=linkToAnnouncement,proto3" json:"linkToAnnouncement,omitempty"`
+	AnnouncementID     int64                  `protobuf:"varint,6,opt,name=announcementID,proto3" json:"announcementID,omitempty"`
+	Images             []string               `protobuf:"bytes,7,rep,name=images,proto3" json:"images,omitempty"`
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
@@ -199,13 +198,6 @@ func (x *AnnouncementData) ProtoReflect() protoreflect.Message {
 // Deprecated: Use AnnouncementData.ProtoReflect.Descriptor instead.
 func (*AnnouncementData) Descriptor() ([]byte, []int) {
 	return file_announcements_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *AnnouncementData) GetAuthorName() string {
-	if x != nil {
-		return x.AuthorName
-	}
-	return ""
 }
 
 func (x *AnnouncementData) GetAuthorID() int64 {
@@ -559,18 +551,15 @@ const file_announcements_proto_rawDesc = "" +
 	"\x0eannouncementID\x18\x06 \x01(\x03R\x0eannouncementID\x12\x1a\n" +
 	"\bauthorID\x18\a \x01(\x03R\bauthorID\"l\n" +
 	"\x1bSearchAnnouncementsResponse\x12M\n" +
-	"\x11announcementsData\x18\x01 \x03(\v2\x1f.announcements.AnnouncementDataR\x11announcementsData\"\x92\x02\n" +
-	"\x10AnnouncementData\x12\x1e\n" +
-	"\n" +
-	"authorName\x18\x01 \x01(\tR\n" +
-	"authorName\x12\x1a\n" +
-	"\bauthorID\x18\x02 \x01(\x03R\bauthorID\x12\x14\n" +
-	"\x05title\x18\x03 \x01(\tR\x05title\x12 \n" +
-	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x1a\n" +
-	"\bcategory\x18\x05 \x01(\tR\bcategory\x12.\n" +
-	"\x12linkToAnnouncement\x18\x06 \x01(\tR\x12linkToAnnouncement\x12&\n" +
-	"\x0eannouncementID\x18\a \x01(\x03R\x0eannouncementID\x12\x16\n" +
-	"\x06images\x18\b \x03(\tR\x06images\"\x8b\x01\n" +
+	"\x11announcementsData\x18\x01 \x03(\v2\x1f.announcements.AnnouncementDataR\x11announcementsData\"\xf2\x01\n" +
+	"\x10AnnouncementData\x12\x1a\n" +
+	"\bauthorID\x18\x01 \x01(\x03R\bauthorID\x12\x14\n" +
+	"\x05title\x18\x02 \x01(\tR\x05title\x12 \n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x1a\n" +
+	"\bcategory\x18\x04 \x01(\tR\bcategory\x12.\n" +
+	"\x12linkToAnnouncement\x18\x05 \x01(\tR\x12linkToAnnouncement\x12&\n" +
+	"\x0eannouncementID\x18\x06 \x01(\x03R\x0eannouncementID\x12\x16\n" +
+	"\x06images\x18\a \x03(\tR\x06images\"\x8b\x01\n" +
 	"\x19CreateAnnouncementRequest\x12\x14\n" +
 	"\x05title\x18\x01 \x01(\tR\x05title\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x1a\n" +
